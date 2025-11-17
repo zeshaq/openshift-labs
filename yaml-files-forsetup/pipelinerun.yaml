@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  # I've given it a new name to be safe
+  name: ocp-cicd-pipeline-run-4
+  namespace: ze-ocp-pipe
+spec:
+  pipelineRef:
+    name: ocp-cicd-pipeline
+  serviceAccountName: pipeline
+  workspaces:
+    - name: shared-workspace
+      # This config tells Tekton to create a default PVC
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi # 1 GB should be plenty
+              
+    - name: gitops-clone-workspace
+      # This config tells Tekton to create a default PVC
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi # 1 GB should be plenty

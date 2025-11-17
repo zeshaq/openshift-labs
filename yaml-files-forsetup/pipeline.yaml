@@ -1,0 +1,146 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: ocp-cicd-pipeline
+  namespace: ze-ocp-pipe
+spec:
+  workspaces:
+    - name: shared-workspace
+    - name: gitops-clone-workspace
+
+  tasks:
+    - name: git-clone
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+      params:
+        - name: URL
+          value: "https://gitlab.zeteq.com/zeshaq/ocp-cicd.git"
+        - name: REVISION
+          value: main
+        - name: DELETE_EXISTING
+          value: "true"
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+
+    - name: s2i-php
+      runAfter: [git-clone]
+      taskRef:
+        resolver: cluster
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: s2i-php
+          - name: namespace
+            value: openshift-pipelines
+      params:
+        - name: IMAGE
+          value: "image-registry.openshift-image-registry.svc:5000/ze-ocp-pipe/ocp-cicd"
+        - name: BUILDER_IMAGE
+          value: "registry.redhat.io/ubi8/php-81:1-209"
+        - name: VERSION
+          value: "latest"
+        - name: FORMAT
+          value: oci
+        - name: CONTEXT
+          value: "."
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+
+    - name: get-image-digest
+      runAfter: [s2i-php]
+      taskSpec:
+        params:
+          - name: SCRIPT
+            type: string
+        results:
+          - name: IMAGE_URL
+            description: The full image URL with sha256 digest
+        steps:
+          - name: run-script
+            image: registry.redhat.io/openshift4/ose-cli:v4.13
+            script: |
+              #!/bin/sh
+              $(params.SCRIPT)
+      params:
+        - name: SCRIPT
+          value: |
+            set -ex
+
+            echo "Waiting for ImageStream tag 'latest' to appear..."
+            
+            for _ in $(seq 1 15); do
+              IMAGE_URL=$(oc get is ocp-cicd -o jsonpath='{.status.tags[?(@.tag=="latest")].items[0].dockerImageReference}')
+              [ -n "$IMAGE_URL" ] && break
+              sleep 2
+            done
+
+            if [ -z "$IMAGE_URL" ]; then
+              echo "Error: Timed out waiting for ImageStream 'ocp-cicd' or tag 'latest'."
+              exit 1
+            fi
+
+            echo -n $IMAGE_URL > $(results.IMAGE_URL.path)
+            echo "Image URL result produced: $IMAGE_URL"
+
+    - name: git-cli
+      runAfter: [get-image-digest]
+      taskSpec:
+        params:
+          - name: GIT_SCRIPT
+            type: string
+        workspaces:
+          - name: source
+        steps:
+          - name: git-cli
+            image: alpine/git:latest
+            workingDir: /workspace/source
+            script: |
+              #!/bin/sh
+              $(params.GIT_SCRIPT)
+      params:
+        - name: GIT_SCRIPT
+          value: |
+            set -ex
+
+            GITOPS_REPO_URL="https://gitlab.zeteq.com/zeshaq/ocp-cicd-config.git"
+            DEPLOYMENT_FILE="deployment.yaml"
+
+            NEW_IMAGE_URL="$(tasks.get-image-digest.results.IMAGE_URL)"
+
+            if [ -z "$NEW_IMAGE_URL" ]; then
+              echo "Error: NEW_IMAGE_URL variable is empty."
+              exit 1
+            fi
+
+            echo "Updating GitOps repo with: $NEW_IMAGE_URL"
+
+            git config --global user.email "pipeline@openshift.com"
+            git config --global user.name "OpenShift Pipeline"
+
+            # --- THIS IS THE FIX ---
+            # Clone into a new subdirectory named 'gitops-repo'
+            git clone $GITOPS_REPO_URL gitops-repo
+            # 'cd' into that new directory
+            cd gitops-repo
+            # --- END OF FIX ---
+
+            sed -i "s|image:.*|image: $NEW_IMAGE_URL|g" $DEPLOYMENT_FILE
+
+            git add $DEPLOYMENT_FILE
+            git commit -m "Pipeline: Update image to $NEW_IMAGE_URL"
+            git push
+
+            echo "GitOps repo updated successfully."
+      workspaces:
+        - name: source
+          workspace: gitops-clone-workspace

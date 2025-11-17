@@ -1,0 +1,11 @@
+cat > cloud <<EOF
+[default]
+aws_access_key_id = <your_key>
+aws_secret_access_key = <your_secret>
+EOF
+
+oc create secret generic cloud-credentials \
+  -n openshift-adp \
+  --from-file=cloud=cloud
+
+rm cloud

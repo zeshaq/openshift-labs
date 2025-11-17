@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # This is the name for your GitOps application
+  name: ocp-cicd-app
+  # Deploy this Application resource in the OpenShift GitOps namespace
+  namespace: openshift-gitops
+spec:
+  # Use the 'default' Argo CD project
+  project: default
+  
+  # 1. WHAT to deploy
+  source:
+    # Your pipeline pushes to this Git repo
+    repoURL: https://gitlab.zeteq.com/zeshaq/ocp-cicd-config.git
+    
+    # It pushes to the 'main' branch
+    targetRevision: main
+    
+    # The deployment.yaml is in the root of the repo
+    path: .
+    
+  # 2. WHERE to deploy it
+  destination:
+    # Deploy to your application's namespace
+    namespace: ze-ocp-pipe
+    
+    # This is always the server URL for in-cluster deployment
+    server: https://kubernetes.default.svc
+    
+  # 3. HOW to deploy it (The "GitOps magic")
+  syncPolicy:
+    automated:
+      # Automatically create resources that are in Git but not the cluster
+      prune: true
+      
+      # Automatically sync new changes from Git
+      selfHeal: true
+
+
+  #ze-ocp-pipe-uat

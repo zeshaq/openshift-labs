@@ -1,0 +1,60 @@
+oc new-project ze-ocp-pipe
+oc adm policy add-role-to-user edit -z pipeline
+
+
+oc create secret generic gitlab-read-creds \
+  --from-literal=username='zeshaq' \
+  --from-literal=password='glpat-58-EfmVVhIEKL8fm3mHXbG86MQp1OjMH.01.0w13gwk4q' \
+  --type=kubernetes.io/basic-auth \
+  --namespace=ze-ocp-pipe
+
+
+oc patch serviceaccount pipeline \
+  --type=json \
+  -p='[{"op": "add", "path": "/secrets/-", "value": {"name": "gitlab-read-creds"}}]' \
+  --namespace=ze-ocp-pipe
+
+oc create secret generic gitlab-write-creds \
+  --from-literal=username='zeshaq' \
+  --from-literal=password='glpat-58-EfmVVhIEKL8fm3mHXbG86MQp1OjMH.01.0w13gwk4q' \
+  --type=kubernetes.io/basic-auth \
+  --namespace=ze-ocp-pipe
+
+
+oc patch serviceaccount pipeline \
+  --type=json \
+  -p='[{"op": "add", "path": "/secrets/-", "value": {"name": "gitlab-write-creds"}}]' \
+  --namespace=ze-ocp-pipe
+
+oc create imagestream ocp-cicd --namespace=ze-ocp-pipe
+
+
+**********************************
+https://gitlab.zeteq.com/zeshaq/ocp-cicd.git
+https://gitlab.zeteq.com/zeshaq/ocp-cicd.git
+
+
+glpat-58-EfmVVhIEKL8fm3mHXbG86MQp1OjMH.01.0w13gwk4q
+
+
+
+
+oc delete secret gitlab-read-creds -n ze-ocp-pipe
+oc delete secret gitlab-write-creds -n ze-ocp-pipe
+
+
+oc create secret generic gitlab-creds \
+  --from-literal=username='zeshaq' \
+  --from-literal=password='glpat-58-EfmVVhIEKL8fm3mHXbG86MQp1OjMH.01.0w13gwk4q' \
+  --type=kubernetes.io/basic-auth \
+  -n ze-ocp-pipe
+
+
+oc patch serviceaccount pipeline \
+  --type=json \
+  -p='[{"op": "add", "path": "/secrets/-", "value": {"name": "gitlab-creds"}}]' \
+  -n ze-ocp-pipe
+
+oc annotate secret gitlab-creds \
+  tekton.dev/git-0=https://gitlab.zeteq.com \
+  -n ze-ocp-pipe
