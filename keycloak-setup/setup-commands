@@ -1,0 +1,30 @@
+(base) ze@zes-MacBook-Pro keycloak-setup % oc get secret example-keycloak-instance-initial-admin -n keycloak -o jsonpath='{.data.password}' | base64 -d
+8f8accb3dd0b411fbcf6b42f49d723b2 
+
+
+oc create secret generic keycloak-admin-secret \
+  -n keycloak \
+  --from-literal=password='Admin123!'
+
+oc exec example-keycloak-instance-0 /opt/eap/bin/add-user-keycloak.sh -r master -u admin -p myPassword
+
+
+Admin123!
+
+oc adm policy add-scc-to-user -n keycloak -z default nonroot-v2
+
+
+
+oc get secret apps-wildcard-tls-secret -n openshift-ingress -o yaml | \
+  sed 's/namespace: openshift-ingress/namespace: keycloak/' | \
+  oc apply -f -
+
+oc scale statefulset postgresql-db --replicas=0 -n keycloak
+oc scale statefulset postgresql-db --replicas=1 -n keycloak
+
+oc delete pod my-keycloak-instance-0 -n keycloak
+
+oc logs my-keycloak-instance-0 -n keycloak --previous=true
+
+
+oc get endpoints postgresql-db-svc -n keycloak

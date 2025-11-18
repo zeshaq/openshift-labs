@@ -1,0 +1,29 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: my-keycloak-instance
+  namespace: keycloak
+spec:
+  instances: 1
+  db:
+    # --- Database Configuration ---
+    vendor: postgres
+    host: postgresql-db-svc
+    
+    # --- THIS IS THE FIX ---
+    # Set the database name to 'keycloak'
+    database: "keycloak"
+        
+    # --- Secret Key Configuration ---
+    usernameSecret:
+      name: keycloak-db-secret
+      key: POSTGRES_USER
+    passwordSecret:
+      name: keycloak-db-secret
+      key: POSTGRES_PASSWORD
+      
+  # --- HTTP/Hostname Configuration ---
+  http:
+    tlsSecret: apps-wildcard-tls-secret
+  hostname:
+    hostname: keycloak.apps.cluster-realip.zeteq.com

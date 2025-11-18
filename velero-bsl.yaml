@@ -1,0 +1,14 @@
+apiVersion: velero.io/v1
+kind: BackupStorageLocation
+metadata:
+  name: oadp-bucket
+  namespace: openshift-adp
+spec:
+  objectStorage:
+    bucket: oadp-backup   # matches your OBC
+    prefix: velero
+  config:
+    region: noobaa
+  provider: aws
+  storageType:
+    objectStorage: {}

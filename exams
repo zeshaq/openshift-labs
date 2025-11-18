@@ -1,0 +1,29 @@
+🧭 Foundational Exams
+These are the primary certifications for administrators and developers working with OpenShift.
+
+Red Hat Certified OpenShift Administrator exam (EX280) This exam tests the skills required to create, configure, and manage a cloud application platform using Red Hat OpenShift Container Platform.
+
+Red Hat Certified OpenShift Application Developer exam (EX288) This exam focuses on the skills needed to build and deploy containerized applications on an OpenShift cluster.
+
+Red Hat Certified Specialist in Containers (EX188) While not exclusively an OpenShift exam, this certification validates the foundational skills for working with containers using Podman, which is a core technology for OpenShift.
+
+🚀 Specialist Exams
+These exams allow professionals to validate deeper, specialized skills in specific areas of the OpenShift ecosystem.
+
+Red Hat Certified Specialist in OpenShift Virtualization (EX316) Tests the ability to create and manage virtual machines using the OpenShift Virtualization feature.
+
+Red Hat Certified Specialist in Building Resilient Microservices (EX328) Focuses on skills for developing and implementing resilient microservices using Istio and Red Hat OpenShift Service Mesh.
+
+Red Hat Certified Specialist in OpenShift Data Foundation (EX370) Validates skills for deploying and managing Red Hat OpenShift Data Foundation (formerly OpenShift Container Storage) to provide persistent storage for applications.
+
+Red Hat Certified Cloud-Native Developer (EX378) Tests the skills to develop, test, and deploy applications using Quarkus on Red Hat OpenShift.
+
+Red Hat Certified Specialist in OpenShift Automation and Integration (EX380) Validates skills in managing and automating OpenShift clusters at scale, including integration with other enterprise systems.
+
+Red Hat Certified Specialist in OpenShift Advanced Cluster Security (EX430) Tests the ability to secure OpenShift clusters and applications using Red Hat Advanced Cluster Security for Kubernetes (RHACS).
+
+Red Hat Certified Specialist in OpenShift Advanced Cluster Management (EX432) Focuses on the skills needed to manage and control multiple OpenShift clusters from a single point using Red Hat Advanced Cluster Management for Kubernetes.
+
+Red Hat Certified Specialist in MultiCluster Management (EX480) Validates the skills for using Red Hat Advanced Cluster Management for Kubernetes to manage multiple clusters.
+
+Red Hat Certified Specialist in Event-Driven Application Development (EX482) Tests the ability to design and develop event-driven applications using Apache Kafka and Red Hat AMQ Streams.

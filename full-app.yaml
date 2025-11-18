@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  namespace: oadp-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      # OpenShift restricted SCC + Ceph RBD writable
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: nginx
+        image: quay.io/openshift/nginx-118:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: app-storage
+          mountPath: /opt/app-root/src
+      volumes:
+      - name: app-storage
+        persistentVolumeClaim:
+          claimName: app-pvc

@@ -1,0 +1,5061 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-console-chart-console-v2
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-console
+      podSelector:
+        matchLabels:
+          app: console
+          component: ui
+    ports:
+    - port: 3000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: console-chart-v2
+      component: console
+      release: console
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-hive-controllers
+  namespace: hive
+spec:
+  ingress:
+  - ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+      controller-tools.k8s.io: "1.0"
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-ocm-controller
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 48592
+      protocol: TCP
+  - ports:
+    - port: 48342
+      protocol: TCP
+  - ports:
+    - port: 47818
+      protocol: TCP
+  - ports:
+    - port: 35638
+      protocol: TCP
+  - ports:
+    - port: 36558
+      protocol: TCP
+  - ports:
+    - port: 56850
+      protocol: TCP
+  - ports:
+    - port: 45542
+      protocol: TCP
+  - ports:
+    - port: 51466
+      protocol: TCP
+  - ports:
+    - port: 58580
+      protocol: TCP
+  - ports:
+    - port: 44020
+      protocol: TCP
+  - ports:
+    - port: 35622
+      protocol: TCP
+  - ports:
+    - port: 57636
+      protocol: TCP
+  - ports:
+    - port: 60918
+      protocol: TCP
+  - ports:
+    - port: 52090
+      protocol: TCP
+  - ports:
+    - port: 8000
+      protocol: TCP
+  - ports:
+    - port: 42286
+      protocol: TCP
+  - ports:
+    - port: 33102
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: ocm-controller
+      ocm-antiaffinity-selector: ocm-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-grc-policy-propagator
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8443
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    ports:
+    - port: 9443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: grc
+      component: ocm-policy-propagator
+      release: grc
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-manager-work-webhook
+  namespace: open-cluster-management-hub
+spec:
+  ingress:
+  - ports:
+    - port: 8000
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    ports:
+    - port: 9443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cluster-manager-work-webhook
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cert-policy-controller
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cert-policy-controller
+      release: cert-policy-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-permission
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 46794
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: cluster-permission
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-ocm-proxyserver
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 43978
+      protocol: TCP
+  - ports:
+    - port: 35892
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    ports:
+    - port: 6443
+      protocol: TCP
+  - ports:
+    - port: 40918
+      protocol: TCP
+  - ports:
+    - port: 39094
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: ocm-proxyserver
+      ocm-antiaffinity-selector: ocm-proxyserver
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-proxy
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 8091
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      proxy.open-cluster-management.io/component-name: proxy-server
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-manager-registration-webhook
+  namespace: open-cluster-management-hub
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    ports:
+    - port: 9443
+      protocol: TCP
+  - ports:
+    - port: 8000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cluster-manager-registration-webhook
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-operators-standalone-subscription
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 38498
+      protocol: TCP
+  - ports:
+    - port: 54284
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: multicluster-operators-standalone-subscription
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-eda-server-operator-controller-manager
+  namespace: aap
+spec:
+  ingress:
+  - ports:
+    - port: 6789
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-insights-metrics
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 8444
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 57972
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: policyreport
+      component: insights-metrics
+      release: policyreport
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-operators-subscription-report
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 34524
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: multicluster-operators-subscription-report
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-klusterlet
+  namespace: open-cluster-management-agent
+spec:
+  ingress:
+  - ports:
+    - port: 35094
+      protocol: TCP
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 54626
+      protocol: TCP
+  - ports:
+    - port: 54824
+      protocol: TCP
+  - ports:
+    - port: 33862
+      protocol: TCP
+  - ports:
+    - port: 48540
+      protocol: TCP
+  - ports:
+    - port: 45212
+      protocol: TCP
+  - ports:
+    - port: 53282
+      protocol: TCP
+  - ports:
+    - port: 50482
+      protocol: TCP
+  - ports:
+    - port: 38356
+      protocol: TCP
+  - ports:
+    - port: 34384
+      protocol: TCP
+  - ports:
+    - port: 60958
+      protocol: TCP
+  - ports:
+    - port: 47328
+      protocol: TCP
+  - ports:
+    - port: 50926
+      protocol: TCP
+  - ports:
+    - port: 34390
+      protocol: TCP
+  - ports:
+    - port: 54240
+      protocol: TCP
+  - ports:
+    - port: 50262
+      protocol: TCP
+  - ports:
+    - port: 44554
+      protocol: TCP
+  - ports:
+    - port: 38126
+      protocol: TCP
+  - ports:
+    - port: 51046
+      protocol: TCP
+  - ports:
+    - port: 60978
+      protocol: TCP
+  - ports:
+    - port: 55578
+      protocol: TCP
+  - ports:
+    - port: 33958
+      protocol: TCP
+  - ports:
+    - port: 52604
+      protocol: TCP
+  - ports:
+    - port: 49566
+      protocol: TCP
+  - ports:
+    - port: 40656
+      protocol: TCP
+  - ports:
+    - port: 56526
+      protocol: TCP
+  - ports:
+    - port: 56824
+      protocol: TCP
+  - ports:
+    - port: 40188
+      protocol: TCP
+  - ports:
+    - port: 33530
+      protocol: TCP
+  - ports:
+    - port: 43798
+      protocol: TCP
+  - ports:
+    - port: 51602
+      protocol: TCP
+  - ports:
+    - port: 33822
+      protocol: TCP
+  - ports:
+    - port: 35824
+      protocol: TCP
+  - ports:
+    - port: 40160
+      protocol: TCP
+  - ports:
+    - port: 34758
+      protocol: TCP
+  - ports:
+    - port: 36420
+      protocol: TCP
+  - ports:
+    - port: 49896
+      protocol: TCP
+  - ports:
+    - port: 53944
+      protocol: TCP
+  - ports:
+    - port: 58170
+      protocol: TCP
+  - ports:
+    - port: 60828
+      protocol: TCP
+  - ports:
+    - port: 38094
+      protocol: TCP
+  - ports:
+    - port: 51044
+      protocol: TCP
+  - ports:
+    - port: 50232
+      protocol: TCP
+  - ports:
+    - port: 52454
+      protocol: TCP
+  - ports:
+    - port: 33088
+      protocol: TCP
+  - ports:
+    - port: 48622
+      protocol: TCP
+  - ports:
+    - port: 36128
+      protocol: TCP
+  - ports:
+    - port: 44540
+      protocol: TCP
+  - ports:
+    - port: 50194
+      protocol: TCP
+  - ports:
+    - port: 54736
+      protocol: TCP
+  - ports:
+    - port: 33804
+      protocol: TCP
+  - ports:
+    - port: 58350
+      protocol: TCP
+  - ports:
+    - port: 41596
+      protocol: TCP
+  - ports:
+    - port: 46078
+      protocol: TCP
+  - ports:
+    - port: 52576
+      protocol: TCP
+  - ports:
+    - port: 38696
+      protocol: TCP
+  - ports:
+    - port: 35254
+      protocol: TCP
+  - ports:
+    - port: 49706
+      protocol: TCP
+  - ports:
+    - port: 45990
+      protocol: TCP
+  - ports:
+    - port: 37728
+      protocol: TCP
+  - ports:
+    - port: 32858
+      protocol: TCP
+  - ports:
+    - port: 49112
+      protocol: TCP
+  - ports:
+    - port: 34676
+      protocol: TCP
+  - ports:
+    - port: 59578
+      protocol: TCP
+  - ports:
+    - port: 32950
+      protocol: TCP
+  - ports:
+    - port: 52672
+      protocol: TCP
+  - ports:
+    - port: 48830
+      protocol: TCP
+  - ports:
+    - port: 53422
+      protocol: TCP
+  - ports:
+    - port: 49876
+      protocol: TCP
+  - ports:
+    - port: 59490
+      protocol: TCP
+  - ports:
+    - port: 43260
+      protocol: TCP
+  - ports:
+    - port: 37730
+      protocol: TCP
+  - ports:
+    - port: 41158
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: klusterlet
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cert-manager-operator-controller-manager
+  namespace: cert-manager-operator
+spec:
+  ingress:
+  - ports:
+    - port: 60024
+      protocol: TCP
+  - ports:
+    - port: 56606
+      protocol: TCP
+  - ports:
+    - port: 55974
+      protocol: TCP
+  - ports:
+    - port: 60496
+      protocol: TCP
+  - ports:
+    - port: 47200
+      protocol: TCP
+  - ports:
+    - port: 60846
+      protocol: TCP
+  - ports:
+    - port: 55102
+      protocol: TCP
+  - ports:
+    - port: 40648
+      protocol: TCP
+  - ports:
+    - port: 34074
+      protocol: TCP
+  - ports:
+    - port: 43160
+      protocol: TCP
+  - ports:
+    - port: 53172
+      protocol: TCP
+  - ports:
+    - port: 47074
+      protocol: TCP
+  - ports:
+    - port: 55178
+      protocol: TCP
+  - ports:
+    - port: 46926
+      protocol: TCP
+  - ports:
+    - port: 34032
+      protocol: TCP
+  - ports:
+    - port: 43212
+      protocol: TCP
+  - ports:
+    - port: 42256
+      protocol: TCP
+  - ports:
+    - port: 60654
+      protocol: TCP
+  - ports:
+    - port: 45590
+      protocol: TCP
+  - ports:
+    - port: 37118
+      protocol: TCP
+  - ports:
+    - port: 45468
+      protocol: TCP
+  - ports:
+    - port: 58116
+      protocol: TCP
+  - ports:
+    - port: 43352
+      protocol: TCP
+  - ports:
+    - port: 43236
+      protocol: TCP
+  - ports:
+    - port: 45130
+      protocol: TCP
+  - ports:
+    - port: 54548
+      protocol: TCP
+  - ports:
+    - port: 44874
+      protocol: TCP
+  - ports:
+    - port: 49602
+      protocol: TCP
+  - ports:
+    - port: 36054
+      protocol: TCP
+  - ports:
+    - port: 58126
+      protocol: TCP
+  - ports:
+    - port: 56372
+      protocol: TCP
+  - ports:
+    - port: 34226
+      protocol: TCP
+  - ports:
+    - port: 49250
+      protocol: TCP
+  - ports:
+    - port: 50048
+      protocol: TCP
+  - ports:
+    - port: 56644
+      protocol: TCP
+  - ports:
+    - port: 45648
+      protocol: TCP
+  - ports:
+    - port: 56830
+      protocol: TCP
+  - ports:
+    - port: 51592
+      protocol: TCP
+  - ports:
+    - port: 42016
+      protocol: TCP
+  - ports:
+    - port: 41856
+      protocol: TCP
+  - ports:
+    - port: 58674
+      protocol: TCP
+  - ports:
+    - port: 40936
+      protocol: TCP
+  - ports:
+    - port: 43166
+      protocol: TCP
+  - ports:
+    - port: 55278
+      protocol: TCP
+  - ports:
+    - port: 48070
+      protocol: TCP
+  - ports:
+    - port: 36746
+      protocol: TCP
+  - ports:
+    - port: 34458
+      protocol: TCP
+  - ports:
+    - port: 47060
+      protocol: TCP
+  - ports:
+    - port: 39152
+      protocol: TCP
+  - ports:
+    - port: 47162
+      protocol: TCP
+  - ports:
+    - port: 45246
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: cert-manager-operator
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-search-indexer
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 37922
+      protocol: TCP
+  - ports:
+    - port: 49082
+      protocol: TCP
+  - ports:
+    - port: 38888
+      protocol: TCP
+  - ports:
+    - port: 43804
+      protocol: TCP
+  - ports:
+    - port: 34312
+      protocol: TCP
+  - ports:
+    - port: 37416
+      protocol: TCP
+  - ports:
+    - port: 36714
+      protocol: TCP
+  - ports:
+    - port: 55128
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: search
+          component: search-v2-operator
+          name: search-collector
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 3010
+      protocol: TCP
+  - ports:
+    - port: 38112
+      protocol: TCP
+  - ports:
+    - port: 58782
+      protocol: TCP
+  - ports:
+    - port: 58194
+      protocol: TCP
+  - ports:
+    - port: 45464
+      protocol: TCP
+  - ports:
+    - port: 53794
+      protocol: TCP
+  - ports:
+    - port: 34504
+      protocol: TCP
+  - ports:
+    - port: 45802
+      protocol: TCP
+  - ports:
+    - port: 40704
+      protocol: TCP
+  - ports:
+    - port: 57224
+      protocol: TCP
+  - ports:
+    - port: 57634
+      protocol: TCP
+  - ports:
+    - port: 40740
+      protocol: TCP
+  - ports:
+    - port: 39778
+      protocol: TCP
+  - ports:
+    - port: 54882
+      protocol: TCP
+  - ports:
+    - port: 45266
+      protocol: TCP
+  - ports:
+    - port: 47390
+      protocol: TCP
+  - ports:
+    - port: 40706
+      protocol: TCP
+  - ports:
+    - port: 37500
+      protocol: TCP
+  - ports:
+    - port: 41026
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: search
+      component: search-v2-operator
+      name: search-indexer
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-acm-cli-downloads
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 8443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      subcomponent: acm-cli-downloads
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-resource-operator-controller-manager
+  namespace: aap
+spec:
+  ingress:
+  - ports:
+    - port: 6789
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-clusterclaims-controller
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 42994
+      protocol: TCP
+  - ports:
+    - port: 60138
+      protocol: TCP
+  - ports:
+    - port: 56588
+      protocol: TCP
+  - ports:
+    - port: 60142
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: clusterclaims-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-rhacs-operator-controller-manager
+  namespace: rhacs-operator
+spec:
+  ingress:
+  - ports:
+    - port: 33216
+      protocol: TCP
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - ports:
+    - port: 60502
+      protocol: TCP
+  - ports:
+    - port: 36140
+      protocol: TCP
+  - ports:
+    - port: 53964
+      protocol: TCP
+  - ports:
+    - port: 48156
+      protocol: TCP
+  - ports:
+    - port: 56294
+      protocol: TCP
+  - ports:
+    - port: 51912
+      protocol: TCP
+  - ports:
+    - port: 57860
+      protocol: TCP
+  - ports:
+    - port: 40840
+      protocol: TCP
+  - ports:
+    - port: 42456
+      protocol: TCP
+  - ports:
+    - port: 52636
+      protocol: TCP
+  - ports:
+    - port: 49686
+      protocol: TCP
+  - ports:
+    - port: 59688
+      protocol: TCP
+  - ports:
+    - port: 35256
+      protocol: TCP
+  - ports:
+    - port: 39554
+      protocol: TCP
+  - ports:
+    - port: 59172
+      protocol: TCP
+  - ports:
+    - port: 38552
+      protocol: TCP
+  - ports:
+    - port: 52530
+      protocol: TCP
+  - ports:
+    - port: 48600
+      protocol: TCP
+  - ports:
+    - port: 53404
+      protocol: TCP
+  - ports:
+    - port: 48218
+      protocol: TCP
+  - ports:
+    - port: 55568
+      protocol: TCP
+  - ports:
+    - port: 48306
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: rhacs-operator
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cert-manager
+  namespace: cert-manager
+spec:
+  ingress:
+  - ports:
+    - port: 45878
+      protocol: TCP
+  - ports:
+    - port: 45190
+      protocol: TCP
+  - ports:
+    - port: 38570
+      protocol: TCP
+  - ports:
+    - port: 37702
+      protocol: TCP
+  - ports:
+    - port: 9403
+      protocol: TCP
+  - ports:
+    - port: 49010
+      protocol: TCP
+  - ports:
+    - port: 34134
+      protocol: TCP
+  - ports:
+    - port: 54348
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/name: cert-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-operators-application
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    ports:
+    - port: 9442
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: multicluster-operators-application
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-klusterlet-addon-workmgr
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 42892
+      protocol: TCP
+  - ports:
+    - port: 45288
+      protocol: TCP
+  - ports:
+    - port: 47554
+      protocol: TCP
+  - ports:
+    - port: 57004
+      protocol: TCP
+  - ports:
+    - port: 46368
+      protocol: TCP
+  - ports:
+    - port: 32914
+      protocol: TCP
+  - ports:
+    - port: 38106
+      protocol: TCP
+  - ports:
+    - port: 58360
+      protocol: TCP
+  - ports:
+    - port: 53238
+      protocol: TCP
+  - ports:
+    - port: 47280
+      protocol: TCP
+  - ports:
+    - port: 53204
+      protocol: TCP
+  - ports:
+    - port: 34914
+      protocol: TCP
+  - ports:
+    - port: 50764
+      protocol: TCP
+  - ports:
+    - port: 40822
+      protocol: TCP
+  - ports:
+    - port: 49740
+      protocol: TCP
+  - ports:
+    - port: 39218
+      protocol: TCP
+  - ports:
+    - port: 36232
+      protocol: TCP
+  - ports:
+    - port: 57454
+      protocol: TCP
+  - ports:
+    - port: 45382
+      protocol: TCP
+  - ports:
+    - port: 57738
+      protocol: TCP
+  - ports:
+    - port: 45714
+      protocol: TCP
+  - ports:
+    - port: 35386
+      protocol: TCP
+  - ports:
+    - port: 39186
+      protocol: TCP
+  - ports:
+    - port: 46996
+      protocol: TCP
+  - ports:
+    - port: 53200
+      protocol: TCP
+  - ports:
+    - port: 45888
+      protocol: TCP
+  - ports:
+    - port: 47024
+      protocol: TCP
+  - ports:
+    - port: 53058
+      protocol: TCP
+  - ports:
+    - port: 37030
+      protocol: TCP
+  - ports:
+    - port: 59234
+      protocol: TCP
+  - ports:
+    - port: 38854
+      protocol: TCP
+  - ports:
+    - port: 51694
+      protocol: TCP
+  - ports:
+    - port: 41004
+      protocol: TCP
+  - ports:
+    - port: 51612
+      protocol: TCP
+  - ports:
+    - port: 34474
+      protocol: TCP
+  - ports:
+    - port: 8000
+      protocol: TCP
+  - ports:
+    - port: 55680
+      protocol: TCP
+  - ports:
+    - port: 51500
+      protocol: TCP
+  - ports:
+    - port: 36482
+      protocol: TCP
+  - ports:
+    - port: 35878
+      protocol: TCP
+  - ports:
+    - port: 44000
+      protocol: TCP
+  - ports:
+    - port: 42882
+      protocol: TCP
+  - ports:
+    - port: 58366
+      protocol: TCP
+  - ports:
+    - port: 40222
+      protocol: TCP
+  - ports:
+    - port: 45544
+      protocol: TCP
+  - ports:
+    - port: 45772
+      protocol: TCP
+  - ports:
+    - port: 46000
+      protocol: TCP
+  - ports:
+    - port: 56136
+      protocol: TCP
+  - ports:
+    - port: 46336
+      protocol: TCP
+  - ports:
+    - port: 34762
+      protocol: TCP
+  - ports:
+    - port: 40232
+      protocol: TCP
+  - ports:
+    - port: 56658
+      protocol: TCP
+  - ports:
+    - port: 35458
+      protocol: TCP
+  - ports:
+    - port: 54956
+      protocol: TCP
+  - ports:
+    - port: 38166
+      protocol: TCP
+  - ports:
+    - port: 34758
+      protocol: TCP
+  - ports:
+    - port: 33968
+      protocol: TCP
+  - ports:
+    - port: 48830
+      protocol: TCP
+  - ports:
+    - port: 52504
+      protocol: TCP
+  - ports:
+    - port: 35158
+      protocol: TCP
+  - ports:
+    - port: 54898
+      protocol: TCP
+  - ports:
+    - port: 59246
+      protocol: TCP
+  - ports:
+    - port: 51186
+      protocol: TCP
+  - ports:
+    - port: 45974
+      protocol: TCP
+  - ports:
+    - port: 44348
+      protocol: TCP
+  - ports:
+    - port: 35658
+      protocol: TCP
+  - ports:
+    - port: 35274
+      protocol: TCP
+  - ports:
+    - port: 57032
+      protocol: TCP
+  - ports:
+    - port: 59860
+      protocol: TCP
+  - ports:
+    - port: 40210
+      protocol: TCP
+  - ports:
+    - port: 38874
+      protocol: TCP
+  - ports:
+    - port: 36308
+      protocol: TCP
+  - ports:
+    - port: 36572
+      protocol: TCP
+  - ports:
+    - port: 44894
+      protocol: TCP
+  - ports:
+    - port: 33556
+      protocol: TCP
+  - ports:
+    - port: 44964
+      protocol: TCP
+  - ports:
+    - port: 54460
+      protocol: TCP
+  - ports:
+    - port: 58426
+      protocol: TCP
+  - ports:
+    - port: 58794
+      protocol: TCP
+  - ports:
+    - port: 41048
+      protocol: TCP
+  - ports:
+    - port: 43530
+      protocol: TCP
+  - ports:
+    - port: 36266
+      protocol: TCP
+  - ports:
+    - port: 53134
+      protocol: TCP
+  - ports:
+    - port: 57750
+      protocol: TCP
+  - ports:
+    - port: 55696
+      protocol: TCP
+  - ports:
+    - port: 55084
+      protocol: TCP
+  - ports:
+    - port: 36450
+      protocol: TCP
+  - ports:
+    - port: 53808
+      protocol: TCP
+  - ports:
+    - port: 51014
+      protocol: TCP
+  - ports:
+    - port: 36390
+      protocol: TCP
+  - ports:
+    - port: 52488
+      protocol: TCP
+  - ports:
+    - port: 49152
+      protocol: TCP
+  - ports:
+    - port: 34652
+      protocol: TCP
+  - ports:
+    - port: 45690
+      protocol: TCP
+  - ports:
+    - port: 47820
+      protocol: TCP
+  - ports:
+    - port: 58494
+      protocol: TCP
+  - ports:
+    - port: 47456
+      protocol: TCP
+  - ports:
+    - port: 39448
+      protocol: TCP
+  - ports:
+    - port: 45108
+      protocol: TCP
+  - ports:
+    - port: 46756
+      protocol: TCP
+  - ports:
+    - port: 50566
+      protocol: TCP
+  - ports:
+    - port: 50848
+      protocol: TCP
+  - ports:
+    - port: 32992
+      protocol: TCP
+  - ports:
+    - port: 43140
+      protocol: TCP
+  - ports:
+    - port: 34852
+      protocol: TCP
+  - ports:
+    - port: 45638
+      protocol: TCP
+  - ports:
+    - port: 48694
+      protocol: TCP
+  - ports:
+    - port: 51608
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      component: work-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-application-manager
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 58668
+      protocol: TCP
+  - ports:
+    - port: 8000
+      protocol: TCP
+  - ports:
+    - port: 39666
+      protocol: TCP
+  - ports:
+    - port: 51472
+      protocol: TCP
+  - ports:
+    - port: 53838
+      protocol: TCP
+  - ports:
+    - port: 55556
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      component: application-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-search-api
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: multicluster-engine
+      podSelector:
+        matchLabels:
+          app: console-mce
+    ports:
+    - port: 4010
+      protocol: TCP
+  - ports:
+    - port: 48496
+      protocol: TCP
+  - ports:
+    - port: 48756
+      protocol: TCP
+  - ports:
+    - port: 36306
+      protocol: TCP
+  - ports:
+    - port: 38948
+      protocol: TCP
+  - ports:
+    - port: 48514
+      protocol: TCP
+  - ports:
+    - port: 35444
+      protocol: TCP
+  - ports:
+    - port: 57214
+      protocol: TCP
+  - ports:
+    - port: 41346
+      protocol: TCP
+  - ports:
+    - port: 32870
+      protocol: TCP
+  - ports:
+    - port: 37010
+      protocol: TCP
+  - ports:
+    - port: 48412
+      protocol: TCP
+  - ports:
+    - port: 40734
+      protocol: TCP
+  - ports:
+    - port: 52354
+      protocol: TCP
+  - ports:
+    - port: 48700
+      protocol: TCP
+  - ports:
+    - port: 60042
+      protocol: TCP
+  - ports:
+    - port: 48054
+      protocol: TCP
+  - ports:
+    - port: 44408
+      protocol: TCP
+  - ports:
+    - port: 58060
+      protocol: TCP
+  - ports:
+    - port: 38380
+      protocol: TCP
+  - ports:
+    - port: 54314
+      protocol: TCP
+  - ports:
+    - port: 47982
+      protocol: TCP
+  - ports:
+    - port: 49108
+      protocol: TCP
+  - ports:
+    - port: 50078
+      protocol: TCP
+  - ports:
+    - port: 45662
+      protocol: TCP
+  - ports:
+    - port: 55164
+      protocol: TCP
+  - ports:
+    - port: 41398
+      protocol: TCP
+  - ports:
+    - port: 48056
+      protocol: TCP
+  - ports:
+    - port: 45204
+      protocol: TCP
+  - ports:
+    - port: 56294
+      protocol: TCP
+  - ports:
+    - port: 53402
+      protocol: TCP
+  - ports:
+    - port: 38308
+      protocol: TCP
+  - ports:
+    - port: 52102
+      protocol: TCP
+  - ports:
+    - port: 42320
+      protocol: TCP
+  - ports:
+    - port: 60236
+      protocol: TCP
+  - ports:
+    - port: 53242
+      protocol: TCP
+  - ports:
+    - port: 36940
+      protocol: TCP
+  - ports:
+    - port: 59444
+      protocol: TCP
+  - ports:
+    - port: 54624
+      protocol: TCP
+  - ports:
+    - port: 46868
+      protocol: TCP
+  - ports:
+    - port: 39592
+      protocol: TCP
+  - ports:
+    - port: 48258
+      protocol: TCP
+  - ports:
+    - port: 39126
+      protocol: TCP
+  - ports:
+    - port: 43376
+      protocol: TCP
+  - ports:
+    - port: 56712
+      protocol: TCP
+  - ports:
+    - port: 40804
+      protocol: TCP
+  - ports:
+    - port: 33998
+      protocol: TCP
+  - ports:
+    - port: 45782
+      protocol: TCP
+  - ports:
+    - port: 44810
+      protocol: TCP
+  - ports:
+    - port: 39082
+      protocol: TCP
+  - ports:
+    - port: 35636
+      protocol: TCP
+  - ports:
+    - port: 55128
+      protocol: TCP
+  - ports:
+    - port: 49622
+      protocol: TCP
+  - ports:
+    - port: 55148
+      protocol: TCP
+  - ports:
+    - port: 44956
+      protocol: TCP
+  - ports:
+    - port: 58680
+      protocol: TCP
+  - ports:
+    - port: 52424
+      protocol: TCP
+  - ports:
+    - port: 45750
+      protocol: TCP
+  - ports:
+    - port: 46372
+      protocol: TCP
+  - ports:
+    - port: 52192
+      protocol: TCP
+  - ports:
+    - port: 40098
+      protocol: TCP
+  - ports:
+    - port: 41976
+      protocol: TCP
+  - ports:
+    - port: 34382
+      protocol: TCP
+  - ports:
+    - port: 54840
+      protocol: TCP
+  - ports:
+    - port: 39050
+      protocol: TCP
+  - ports:
+    - port: 40956
+      protocol: TCP
+  - ports:
+    - port: 35650
+      protocol: TCP
+  - ports:
+    - port: 46214
+      protocol: TCP
+  - ports:
+    - port: 53810
+      protocol: TCP
+  - ports:
+    - port: 58958
+      protocol: TCP
+  - ports:
+    - port: 34200
+      protocol: TCP
+  - ports:
+    - port: 44244
+      protocol: TCP
+  - ports:
+    - port: 44826
+      protocol: TCP
+  - ports:
+    - port: 39206
+      protocol: TCP
+  - ports:
+    - port: 54892
+      protocol: TCP
+  - ports:
+    - port: 59062
+      protocol: TCP
+  - ports:
+    - port: 53704
+      protocol: TCP
+  - ports:
+    - port: 41682
+      protocol: TCP
+  - ports:
+    - port: 41104
+      protocol: TCP
+  - ports:
+    - port: 48278
+      protocol: TCP
+  - ports:
+    - port: 45828
+      protocol: TCP
+  - ports:
+    - port: 56062
+      protocol: TCP
+  - ports:
+    - port: 57712
+      protocol: TCP
+  - ports:
+    - port: 45276
+      protocol: TCP
+  - ports:
+    - port: 37844
+      protocol: TCP
+  - ports:
+    - port: 55984
+      protocol: TCP
+  - ports:
+    - port: 47174
+      protocol: TCP
+  - ports:
+    - port: 60610
+      protocol: TCP
+  - ports:
+    - port: 41900
+      protocol: TCP
+  - ports:
+    - port: 45098
+      protocol: TCP
+  - ports:
+    - port: 53334
+      protocol: TCP
+  - ports:
+    - port: 34070
+      protocol: TCP
+  - ports:
+    - port: 39706
+      protocol: TCP
+  - ports:
+    - port: 56820
+      protocol: TCP
+  - ports:
+    - port: 46252
+      protocol: TCP
+  - ports:
+    - port: 44996
+      protocol: TCP
+  - ports:
+    - port: 55612
+      protocol: TCP
+  - ports:
+    - port: 44286
+      protocol: TCP
+  - ports:
+    - port: 35350
+      protocol: TCP
+  - ports:
+    - port: 49964
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: search
+      component: search-v2-operator
+      name: search-api
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-hive-machinepool
+  namespace: hive
+spec:
+  ingress:
+  - ports:
+    - port: 8080
+      protocol: TCP
+  - ports:
+    - port: 43394
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: machinepool
+      controller-tools.k8s.io: "1.0"
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-proxy-addon-user
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 51456
+      protocol: TCP
+  - ports:
+    - port: 51462
+      protocol: TCP
+  - ports:
+    - port: 9092
+      protocol: TCP
+  - ports:
+    - port: 8000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      chart: cluster-proxy-addon-2.1.0
+      component: cluster-proxy-addon-user
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-provider-credential-controller
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 46294
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: provider-credential-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multiclusterhub-operator
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 32960
+      protocol: TCP
+  - ports:
+    - port: 45200
+      protocol: TCP
+  - ports:
+    - port: 47722
+      protocol: TCP
+  - ports:
+    - port: 50694
+      protocol: TCP
+  - ports:
+    - port: 55412
+      protocol: TCP
+  - ports:
+    - port: 33504
+      protocol: TCP
+  - ports:
+    - port: 51022
+      protocol: TCP
+  - ports:
+    - port: 42044
+      protocol: TCP
+  - ports:
+    - port: 53226
+      protocol: TCP
+  - ports:
+    - port: 59476
+      protocol: TCP
+  - ports:
+    - port: 60416
+      protocol: TCP
+  - ports:
+    - port: 59600
+      protocol: TCP
+  - ports:
+    - port: 37702
+      protocol: TCP
+  - ports:
+    - port: 44870
+      protocol: TCP
+  - ports:
+    - port: 33246
+      protocol: TCP
+  - ports:
+    - port: 52990
+      protocol: TCP
+  - ports:
+    - port: 54958
+      protocol: TCP
+  - ports:
+    - port: 43320
+      protocol: TCP
+  - ports:
+    - port: 52618
+      protocol: TCP
+  - ports:
+    - port: 33214
+      protocol: TCP
+  - ports:
+    - port: 33238
+      protocol: TCP
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - ports:
+    - port: 43012
+      protocol: TCP
+  - ports:
+    - port: 56266
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8383
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    ports:
+    - port: 9443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: multiclusterhub-operator
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-search-collector
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 57566
+      protocol: TCP
+  - ports:
+    - port: 34780
+      protocol: TCP
+  - ports:
+    - port: 59826
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 5010
+      protocol: TCP
+  - ports:
+    - port: 55230
+      protocol: TCP
+  - ports:
+    - port: 50300
+      protocol: TCP
+  - ports:
+    - port: 49644
+      protocol: TCP
+  - ports:
+    - port: 44368
+      protocol: TCP
+  - ports:
+    - port: 57194
+      protocol: TCP
+  - ports:
+    - port: 39186
+      protocol: TCP
+  - ports:
+    - port: 35138
+      protocol: TCP
+  - ports:
+    - port: 45482
+      protocol: TCP
+  - ports:
+    - port: 50474
+      protocol: TCP
+  - ports:
+    - port: 50654
+      protocol: TCP
+  - ports:
+    - port: 53876
+      protocol: TCP
+  - ports:
+    - port: 35318
+      protocol: TCP
+  - ports:
+    - port: 32860
+      protocol: TCP
+  - ports:
+    - port: 48830
+      protocol: TCP
+  - ports:
+    - port: 56924
+      protocol: TCP
+  - ports:
+    - port: 50742
+      protocol: TCP
+  - ports:
+    - port: 43416
+      protocol: TCP
+  - ports:
+    - port: 50978
+      protocol: TCP
+  - ports:
+    - port: 43516
+      protocol: TCP
+  - ports:
+    - port: 55578
+      protocol: TCP
+  - ports:
+    - port: 56720
+      protocol: TCP
+  - ports:
+    - port: 40912
+      protocol: TCP
+  - ports:
+    - port: 56324
+      protocol: TCP
+  - ports:
+    - port: 37020
+      protocol: TCP
+  - ports:
+    - port: 43408
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: search
+      component: search-v2-operator
+      name: search-collector
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-manager
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 60066
+      protocol: TCP
+  - ports:
+    - port: 36418
+      protocol: TCP
+  - ports:
+    - port: 49544
+      protocol: TCP
+  - ports:
+    - port: 54224
+      protocol: TCP
+  - ports:
+    - port: 49986
+      protocol: TCP
+  - ports:
+    - port: 42728
+      protocol: TCP
+  - ports:
+    - port: 37576
+      protocol: TCP
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 33142
+      protocol: TCP
+  - ports:
+    - port: 45796
+      protocol: TCP
+  - ports:
+    - port: 52318
+      protocol: TCP
+  - ports:
+    - port: 33210
+      protocol: TCP
+  - ports:
+    - port: 60404
+      protocol: TCP
+  - ports:
+    - port: 52702
+      protocol: TCP
+  - ports:
+    - port: 52592
+      protocol: TCP
+  - ports:
+    - port: 53174
+      protocol: TCP
+  - ports:
+    - port: 53782
+      protocol: TCP
+  - ports:
+    - port: 54778
+      protocol: TCP
+  - ports:
+    - port: 57548
+      protocol: TCP
+  - ports:
+    - port: 40792
+      protocol: TCP
+  - ports:
+    - port: 41878
+      protocol: TCP
+  - ports:
+    - port: 35566
+      protocol: TCP
+  - ports:
+    - port: 35102
+      protocol: TCP
+  - ports:
+    - port: 40658
+      protocol: TCP
+  - ports:
+    - port: 54630
+      protocol: TCP
+  - ports:
+    - port: 56600
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cluster-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-managed-serviceaccount-addon-agent
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 8000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      addon-agent: managed-serviceaccount
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cert-manager-webhook
+  namespace: cert-manager
+spec:
+  ingress:
+  - ports:
+    - port: 6080
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    ports:
+    - port: 10250
+      protocol: TCP
+  - ports:
+    - port: 51430
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/name: webhook
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-engine-operator
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    ports:
+    - port: 9443
+      protocol: TCP
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8080
+      protocol: TCP
+  - ports:
+    - port: 46356
+      protocol: TCP
+  - ports:
+    - port: 43862
+      protocol: TCP
+  - ports:
+    - port: 37616
+      protocol: TCP
+  - ports:
+    - port: 41072
+      protocol: TCP
+  - ports:
+    - port: 59686
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: backplane-operator
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-ansible-lightspeed-operator-controller-manager
+  namespace: aap
+spec:
+  ingress:
+  - ports:
+    - port: 6789
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-klusterlet-addon-controller-v2
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 50534
+      protocol: TCP
+  - ports:
+    - port: 57944
+      protocol: TCP
+  - ports:
+    - port: 48352
+      protocol: TCP
+  - ports:
+    - port: 58526
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: klusterlet-addon-controller-v2
+      component: klusterlet-addon-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-el-event-listener-8nt7z1
+  namespace: ze-ocp-pipe
+spec:
+  ingress:
+  - ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/managed-by: EventListener
+      app.kubernetes.io/part-of: Triggers
+      eventlistener: event-listener-8nt7z1
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-curator-controller
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 59460
+      protocol: TCP
+  - ports:
+    - port: 49788
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: cluster-curator-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cert-manager-cainjector
+  namespace: cert-manager
+spec:
+  ingress:
+  - ports:
+    - port: 37732
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: cainjector
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/name: cainjector
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-hive-clustersync
+  namespace: hive
+spec:
+  ingress:
+  - ports:
+    - port: 8080
+      protocol: TCP
+  - ports:
+    - port: 33098
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: clustersync
+      controller-tools.k8s.io: "1.0"
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-nginx-app
+  namespace: oadp-test
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx-app
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-manager-registration-controller
+  namespace: open-cluster-management-hub
+spec:
+  ingress:
+  - ports:
+    - port: 35126
+      protocol: TCP
+  - ports:
+    - port: 36306
+      protocol: TCP
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 53260
+      protocol: TCP
+  - ports:
+    - port: 33378
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: clustermanager-registration-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-search-postgres
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: search
+          component: search-v2-operator
+          name: search-indexer
+    - podSelector:
+        matchLabels:
+          app: search
+          component: search-v2-operator
+          name: search-api
+    ports:
+    - port: 5432
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: search
+      component: search-v2-operator
+      name: search-postgres
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-insights-client
+  namespace: open-cluster-management
+spec:
+  podSelector:
+    matchLabels:
+      name: insights-client
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-ocp-cicd
+  namespace: ze-ocp-pipe
+spec:
+  podSelector:
+    matchLabels:
+      app: ocp-cicd
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-governance-policy-framework
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 8080
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: governance-policy-framework
+      release: governance-policy-framework
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-automation-hub-operator-controller-manager
+  namespace: aap
+spec:
+  ingress:
+  - ports:
+    - port: 6789
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-config-policy-controller
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: config-policy-controller
+      release: config-policy-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-k10-kasten-operator-rhmp-controller-manager
+  namespace: kasten-io
+spec:
+  ingress:
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - ports:
+    - port: 43906
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-hypershift-addon-agent
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 54484
+      protocol: TCP
+  - ports:
+    - port: 41384
+      protocol: TCP
+  - ports:
+    - port: 51946
+      protocol: TCP
+  - ports:
+    - port: 56194
+      protocol: TCP
+  - ports:
+    - port: 58958
+      protocol: TCP
+  - ports:
+    - port: 58896
+      protocol: TCP
+  - ports:
+    - port: 32974
+      protocol: TCP
+  - ports:
+    - port: 44740
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 36410
+      protocol: TCP
+  - ports:
+    - port: 60754
+      protocol: TCP
+  - ports:
+    - port: 60020
+      protocol: TCP
+  - ports:
+    - port: 43486
+      protocol: TCP
+  - ports:
+    - port: 49510
+      protocol: TCP
+  - ports:
+    - port: 51458
+      protocol: TCP
+  - ports:
+    - port: 46508
+      protocol: TCP
+  - ports:
+    - port: 46812
+      protocol: TCP
+  - ports:
+    - port: 39242
+      protocol: TCP
+  - ports:
+    - port: 37988
+      protocol: TCP
+  - ports:
+    - port: 51312
+      protocol: TCP
+  - ports:
+    - port: 51284
+      protocol: TCP
+  - ports:
+    - port: 57162
+      protocol: TCP
+  - ports:
+    - port: 58420
+      protocol: TCP
+  - ports:
+    - port: 59402
+      protocol: TCP
+  - ports:
+    - port: 42458
+      protocol: TCP
+  - ports:
+    - port: 40092
+      protocol: TCP
+  - ports:
+    - port: 40344
+      protocol: TCP
+  - ports:
+    - port: 58934
+      protocol: TCP
+  - ports:
+    - port: 58390
+      protocol: TCP
+  - ports:
+    - port: 54646
+      protocol: TCP
+  - ports:
+    - port: 57966
+      protocol: TCP
+  - ports:
+    - port: 57116
+      protocol: TCP
+  - ports:
+    - port: 54758
+      protocol: TCP
+  - ports:
+    - port: 53326
+      protocol: TCP
+  - ports:
+    - port: 56186
+      protocol: TCP
+  - ports:
+    - port: 55300
+      protocol: TCP
+  - ports:
+    - port: 36720
+      protocol: TCP
+  - ports:
+    - port: 52538
+      protocol: TCP
+  - ports:
+    - port: 39692
+      protocol: TCP
+  - ports:
+    - port: 48402
+      protocol: TCP
+  - ports:
+    - port: 51772
+      protocol: TCP
+  - ports:
+    - port: 44208
+      protocol: TCP
+  - ports:
+    - port: 39908
+      protocol: TCP
+  - ports:
+    - port: 37660
+      protocol: TCP
+  - ports:
+    - port: 59076
+      protocol: TCP
+  - ports:
+    - port: 41142
+      protocol: TCP
+  - ports:
+    - port: 43214
+      protocol: TCP
+  - ports:
+    - port: 34502
+      protocol: TCP
+  - ports:
+    - port: 57944
+      protocol: TCP
+  - ports:
+    - port: 48844
+      protocol: TCP
+  - ports:
+    - port: 35840
+      protocol: TCP
+  - ports:
+    - port: 57018
+      protocol: TCP
+  - ports:
+    - port: 44038
+      protocol: TCP
+  - ports:
+    - port: 55192
+      protocol: TCP
+  - ports:
+    - port: 44540
+      protocol: TCP
+  - ports:
+    - port: 35666
+      protocol: TCP
+  - ports:
+    - port: 50512
+      protocol: TCP
+  - ports:
+    - port: 60854
+      protocol: TCP
+  - ports:
+    - port: 59688
+      protocol: TCP
+  - ports:
+    - port: 57232
+      protocol: TCP
+  - ports:
+    - port: 60422
+      protocol: TCP
+  - ports:
+    - port: 41316
+      protocol: TCP
+  - ports:
+    - port: 58108
+      protocol: TCP
+  - ports:
+    - port: 51480
+      protocol: TCP
+  - ports:
+    - port: 35948
+      protocol: TCP
+  - ports:
+    - port: 54750
+      protocol: TCP
+  - ports:
+    - port: 43550
+      protocol: TCP
+  - ports:
+    - port: 55656
+      protocol: TCP
+  - ports:
+    - port: 35520
+      protocol: TCP
+  - ports:
+    - port: 52300
+      protocol: TCP
+  - ports:
+    - port: 45824
+      protocol: TCP
+  - ports:
+    - port: 54964
+      protocol: TCP
+  - ports:
+    - port: 37302
+      protocol: TCP
+  - ports:
+    - port: 56074
+      protocol: TCP
+  - ports:
+    - port: 38084
+      protocol: TCP
+  - ports:
+    - port: 52518
+      protocol: TCP
+  - ports:
+    - port: 59954
+      protocol: TCP
+  - ports:
+    - port: 49500
+      protocol: TCP
+  - ports:
+    - port: 41118
+      protocol: TCP
+  - ports:
+    - port: 60896
+      protocol: TCP
+  - ports:
+    - port: 34428
+      protocol: TCP
+  - ports:
+    - port: 47956
+      protocol: TCP
+  - ports:
+    - port: 36014
+      protocol: TCP
+  - ports:
+    - port: 56060
+      protocol: TCP
+  - ports:
+    - port: 54920
+      protocol: TCP
+  - ports:
+    - port: 48276
+      protocol: TCP
+  - ports:
+    - port: 38856
+      protocol: TCP
+  - ports:
+    - port: 44936
+      protocol: TCP
+  - ports:
+    - port: 43328
+      protocol: TCP
+  - ports:
+    - port: 54298
+      protocol: TCP
+  - ports:
+    - port: 34778
+      protocol: TCP
+  - ports:
+    - port: 59884
+      protocol: TCP
+  - ports:
+    - port: 56864
+      protocol: TCP
+  - ports:
+    - port: 49886
+      protocol: TCP
+  - ports:
+    - port: 45410
+      protocol: TCP
+  - ports:
+    - port: 56368
+      protocol: TCP
+  - ports:
+    - port: 36906
+      protocol: TCP
+  - ports:
+    - port: 49302
+      protocol: TCP
+  - ports:
+    - port: 44190
+      protocol: TCP
+  - ports:
+    - port: 33968
+      protocol: TCP
+  - ports:
+    - port: 47138
+      protocol: TCP
+  - ports:
+    - port: 58284
+      protocol: TCP
+  - ports:
+    - port: 36172
+      protocol: TCP
+  - ports:
+    - port: 56622
+      protocol: TCP
+  - ports:
+    - port: 32796
+      protocol: TCP
+  - ports:
+    - port: 33906
+      protocol: TCP
+  - ports:
+    - port: 51832
+      protocol: TCP
+  - ports:
+    - port: 54786
+      protocol: TCP
+  - ports:
+    - port: 33428
+      protocol: TCP
+  - ports:
+    - port: 50700
+      protocol: TCP
+  - ports:
+    - port: 50538
+      protocol: TCP
+  - ports:
+    - port: 37554
+      protocol: TCP
+  - ports:
+    - port: 35680
+      protocol: TCP
+  - ports:
+    - port: 40796
+      protocol: TCP
+  - ports:
+    - port: 41796
+      protocol: TCP
+  - ports:
+    - port: 59914
+      protocol: TCP
+  - ports:
+    - port: 57608
+      protocol: TCP
+  - ports:
+    - port: 56156
+      protocol: TCP
+  - ports:
+    - port: 58258
+      protocol: TCP
+  - ports:
+    - port: 42870
+      protocol: TCP
+  - ports:
+    - port: 37548
+      protocol: TCP
+  - ports:
+    - port: 56184
+      protocol: TCP
+  - ports:
+    - port: 35444
+      protocol: TCP
+  - ports:
+    - port: 34984
+      protocol: TCP
+  - ports:
+    - port: 60286
+      protocol: TCP
+  - ports:
+    - port: 59294
+      protocol: TCP
+  - ports:
+    - port: 8000
+      protocol: TCP
+  - ports:
+    - port: 58366
+      protocol: TCP
+  - ports:
+    - port: 48724
+      protocol: TCP
+  - ports:
+    - port: 42794
+      protocol: TCP
+  - ports:
+    - port: 60088
+      protocol: TCP
+  - ports:
+    - port: 54948
+      protocol: TCP
+  - ports:
+    - port: 58036
+      protocol: TCP
+  - ports:
+    - port: 40316
+      protocol: TCP
+  - ports:
+    - port: 51908
+      protocol: TCP
+  - ports:
+    - port: 46490
+      protocol: TCP
+  - ports:
+    - port: 34468
+      protocol: TCP
+  - ports:
+    - port: 47196
+      protocol: TCP
+  - ports:
+    - port: 35612
+      protocol: TCP
+  - ports:
+    - port: 57918
+      protocol: TCP
+  - ports:
+    - port: 40850
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: hypershift-addon-agent
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-aap-gateway-operator-controller-manager
+  namespace: aap
+spec:
+  ingress:
+  - ports:
+    - port: 6789
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-ocp-cicd
+  namespace: ze-ocp-pipe-uat
+spec:
+  podSelector:
+    matchLabels:
+      app: ocp-cicd
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-volsync-addon-controller
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 47062
+      protocol: TCP
+  - ports:
+    - port: 50256
+      protocol: TCP
+  - ports:
+    - port: 37164
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: volsync-addon-controller
+      component: volsync-addon-controller
+      release: volsync
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-clusterlifecycle-state-metrics-v2
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 8443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: clusterlifecycle-state-metrics-v2
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-ocm-webhook
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    ports:
+    - port: 8000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: ocm-webhook
+      ocm-antiaffinity-selector: ocm-webhook
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-my-nginx-app
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-image-set-controller
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 59303
+      protocol: TCP
+  - ports:
+    - port: 48674
+      protocol: TCP
+  - ports:
+    - port: 36174
+      protocol: TCP
+  - ports:
+    - port: 49340
+      protocol: TCP
+  - ports:
+    - port: 60596
+      protocol: TCP
+  - ports:
+    - port: 57712
+      protocol: TCP
+  - ports:
+    - port: 53146
+      protocol: TCP
+  - ports:
+    - port: 56582
+      protocol: TCP
+  - ports:
+    - port: 36770
+      protocol: TCP
+  - ports:
+    - port: 34534
+      protocol: TCP
+  - ports:
+    - port: 60358
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: cluster-image-set-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-hive-operator
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 40864
+      protocol: TCP
+  - ports:
+    - port: 47816
+      protocol: TCP
+  - ports:
+    - port: 48446
+      protocol: TCP
+  - ports:
+    - port: 54140
+      protocol: TCP
+  - ports:
+    - port: 36510
+      protocol: TCP
+  - ports:
+    - port: 35048
+      protocol: TCP
+  - ports:
+    - port: 59708
+      protocol: TCP
+  - ports:
+    - port: 54690
+      protocol: TCP
+  - ports:
+    - port: 51392
+      protocol: TCP
+  - ports:
+    - port: 44020
+      protocol: TCP
+  - ports:
+    - port: 41154
+      protocol: TCP
+  - ports:
+    - port: 45692
+      protocol: TCP
+  - ports:
+    - port: 41008
+      protocol: TCP
+  - ports:
+    - port: 34832
+      protocol: TCP
+  - ports:
+    - port: 51020
+      protocol: TCP
+  - ports:
+    - port: 47238
+      protocol: TCP
+  - ports:
+    - port: 40936
+      protocol: TCP
+  - ports:
+    - port: 36216
+      protocol: TCP
+  - ports:
+    - port: 34358
+      protocol: TCP
+  - ports:
+    - port: 57238
+      protocol: TCP
+  - ports:
+    - port: 34756
+      protocol: TCP
+  - ports:
+    - port: 41508
+      protocol: TCP
+  - ports:
+    - port: 43026
+      protocol: TCP
+  - ports:
+    - port: 46554
+      protocol: TCP
+  - ports:
+    - port: 39922
+      protocol: TCP
+  - ports:
+    - port: 51808
+      protocol: TCP
+  - ports:
+    - port: 41482
+      protocol: TCP
+  - ports:
+    - port: 57298
+      protocol: TCP
+  - ports:
+    - port: 45794
+      protocol: TCP
+  - ports:
+    - port: 34774
+      protocol: TCP
+  - ports:
+    - port: 39164
+      protocol: TCP
+  - ports:
+    - port: 59670
+      protocol: TCP
+  - ports:
+    - port: 8080
+      protocol: TCP
+  - ports:
+    - port: 44654
+      protocol: TCP
+  - ports:
+    - port: 44360
+      protocol: TCP
+  - ports:
+    - port: 59426
+      protocol: TCP
+  - ports:
+    - port: 56904
+      protocol: TCP
+  - ports:
+    - port: 59562
+      protocol: TCP
+  - ports:
+    - port: 59446
+      protocol: TCP
+  - ports:
+    - port: 51946
+      protocol: TCP
+  - ports:
+    - port: 38586
+      protocol: TCP
+  - ports:
+    - port: 60572
+      protocol: TCP
+  - ports:
+    - port: 38002
+      protocol: TCP
+  - ports:
+    - port: 40018
+      protocol: TCP
+  - ports:
+    - port: 60044
+      protocol: TCP
+  - ports:
+    - port: 54324
+      protocol: TCP
+  - ports:
+    - port: 45822
+      protocol: TCP
+  - ports:
+    - port: 60346
+      protocol: TCP
+  - ports:
+    - port: 48836
+      protocol: TCP
+  - ports:
+    - port: 42916
+      protocol: TCP
+  - ports:
+    - port: 33382
+      protocol: TCP
+  - ports:
+    - port: 57156
+      protocol: TCP
+  - ports:
+    - port: 60786
+      protocol: TCP
+  - ports:
+    - port: 49442
+      protocol: TCP
+  - ports:
+    - port: 51214
+      protocol: TCP
+  - ports:
+    - port: 53564
+      protocol: TCP
+  - ports:
+    - port: 41542
+      protocol: TCP
+  - ports:
+    - port: 49512
+      protocol: TCP
+  - ports:
+    - port: 54686
+      protocol: TCP
+  - ports:
+    - port: 55332
+      protocol: TCP
+  - ports:
+    - port: 39610
+      protocol: TCP
+  - ports:
+    - port: 55202
+      protocol: TCP
+  - ports:
+    - port: 36082
+      protocol: TCP
+  - ports:
+    - port: 55458
+      protocol: TCP
+  - ports:
+    - port: 41122
+      protocol: TCP
+  - ports:
+    - port: 57774
+      protocol: TCP
+  - ports:
+    - port: 58580
+      protocol: TCP
+  - ports:
+    - port: 41126
+      protocol: TCP
+  - ports:
+    - port: 53824
+      protocol: TCP
+  - ports:
+    - port: 60486
+      protocol: TCP
+  - ports:
+    - port: 59710
+      protocol: TCP
+  - ports:
+    - port: 37898
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: hive-operator
+      controller-tools.k8s.io: "1.0"
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-managedcluster-import-controller-v2
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 9091
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: managedcluster-import-controller-v2
+      ocm-antiaffinity-selector: managedclusterimport
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-operators-channel
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    ports:
+    - port: 9443
+      protocol: TCP
+  - ports:
+    - port: 33152
+      protocol: TCP
+  - ports:
+    - port: 47266
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: multicluster-operators-channel
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-operator
+  namespace: hypershift
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    ports:
+    - port: 9000
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    ports:
+    - port: 9443
+      protocol: TCP
+  - ports:
+    - port: 56462
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: operator
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-manager-addon-manager-controller
+  namespace: open-cluster-management-hub
+spec:
+  ingress:
+  - ports:
+    - port: 54332
+      protocol: TCP
+  - ports:
+    - port: 53902
+      protocol: TCP
+  - ports:
+    - port: 39442
+      protocol: TCP
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 55906
+      protocol: TCP
+  - ports:
+    - port: 42790
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: clustermanager-addon-manager-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-search-v2-operator-controller-manager
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 42610
+      protocol: TCP
+  - ports:
+    - port: 38564
+      protocol: TCP
+  - ports:
+    - port: 49696
+      protocol: TCP
+  - ports:
+    - port: 49142
+      protocol: TCP
+  - ports:
+    - port: 39862
+      protocol: TCP
+  - ports:
+    - port: 37832
+      protocol: TCP
+  - ports:
+    - port: 51798
+      protocol: TCP
+  - ports:
+    - port: 36326
+      protocol: TCP
+  - ports:
+    - port: 46836
+      protocol: TCP
+  - ports:
+    - port: 55628
+      protocol: TCP
+  - ports:
+    - port: 44412
+      protocol: TCP
+  - ports:
+    - port: 46250
+      protocol: TCP
+  - ports:
+    - port: 57312
+      protocol: TCP
+  - ports:
+    - port: 35906
+      protocol: TCP
+  - ports:
+    - port: 48946
+      protocol: TCP
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - ports:
+    - port: 55756
+      protocol: TCP
+  - ports:
+    - port: 38302
+      protocol: TCP
+  - ports:
+    - port: 38772
+      protocol: TCP
+  - ports:
+    - port: 39188
+      protocol: TCP
+  - ports:
+    - port: 59042
+      protocol: TCP
+  - ports:
+    - port: 34214
+      protocol: TCP
+  - ports:
+    - port: 52310
+      protocol: TCP
+  - ports:
+    - port: 46810
+      protocol: TCP
+  - ports:
+    - port: 55516
+      protocol: TCP
+  - ports:
+    - port: 59606
+      protocol: TCP
+  - ports:
+    - port: 55934
+      protocol: TCP
+  - ports:
+    - port: 55386
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-proxy-proxy-agent
+  namespace: open-cluster-management-agent-addon
+spec:
+  ingress:
+  - ports:
+    - port: 8888
+      protocol: TCP
+  - ports:
+    - port: 55292
+      protocol: TCP
+  - ports:
+    - port: 8000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      open-cluster-management.io/addon: cluster-proxy
+      proxy.open-cluster-management.io/component-name: proxy-agent
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-observability-operator
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 47140
+      protocol: TCP
+  - ports:
+    - port: 43416
+      protocol: TCP
+  - ports:
+    - port: 59974
+      protocol: TCP
+  - ports:
+    - port: 41622
+      protocol: TCP
+  - ports:
+    - port: 57546
+      protocol: TCP
+  - ports:
+    - port: 47388
+      protocol: TCP
+  - ports:
+    - port: 60340
+      protocol: TCP
+  - ports:
+    - port: 38942
+      protocol: TCP
+  - ports:
+    - port: 56436
+      protocol: TCP
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - ports:
+    - port: 55612
+      protocol: TCP
+  - ports:
+    - port: 52624
+      protocol: TCP
+  - ports:
+    - port: 47982
+      protocol: TCP
+  - ports:
+    - port: 50962
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    ports:
+    - port: 9443
+      protocol: TCP
+  - ports:
+    - port: 41382
+      protocol: TCP
+  - ports:
+    - port: 60406
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: multicluster-observability-operator
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-discovery-operator
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 47522
+      protocol: TCP
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+      podSelector:
+        matchLabels:
+          app: kube-apiserver-operator
+    ports:
+    - port: 9443
+      protocol: TCP
+  - ports:
+    - port: 54770
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: discovery-operator
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-submariner-addon
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 59914
+      protocol: TCP
+  - ports:
+    - port: 48214
+      protocol: TCP
+  - ports:
+    - port: 38386
+      protocol: TCP
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 58608
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: submariner-addon
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-infrastructure-operator
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 57128
+      protocol: TCP
+  - ports:
+    - port: 32908
+      protocol: TCP
+  - ports:
+    - port: 36928
+      protocol: TCP
+  - ports:
+    - port: 52798
+      protocol: TCP
+  - ports:
+    - port: 37246
+      protocol: TCP
+  - ports:
+    - port: 34204
+      protocol: TCP
+  - ports:
+    - port: 50326
+      protocol: TCP
+  - ports:
+    - port: 33086
+      protocol: TCP
+  - ports:
+    - port: 47348
+      protocol: TCP
+  - ports:
+    - port: 36122
+      protocol: TCP
+  - ports:
+    - port: 39864
+      protocol: TCP
+  - ports:
+    - port: 59614
+      protocol: TCP
+  - ports:
+    - port: 53770
+      protocol: TCP
+  - ports:
+    - port: 56820
+      protocol: TCP
+  - ports:
+    - port: 36370
+      protocol: TCP
+  - ports:
+    - port: 50350
+      protocol: TCP
+  - ports:
+    - port: 53560
+      protocol: TCP
+  - ports:
+    - port: 46196
+      protocol: TCP
+  - ports:
+    - port: 51800
+      protocol: TCP
+  - ports:
+    - port: 57506
+      protocol: TCP
+  - ports:
+    - port: 50314
+      protocol: TCP
+  - ports:
+    - port: 51116
+      protocol: TCP
+  - ports:
+    - port: 34836
+      protocol: TCP
+  - ports:
+    - port: 59948
+      protocol: TCP
+  - ports:
+    - port: 50162
+      protocol: TCP
+  - ports:
+    - port: 52914
+      protocol: TCP
+  - ports:
+    - port: 55864
+      protocol: TCP
+  - ports:
+    - port: 8081
+      protocol: TCP
+  - ports:
+    - port: 60840
+      protocol: TCP
+  - ports:
+    - port: 58684
+      protocol: TCP
+  - ports:
+    - port: 36186
+      protocol: TCP
+  - ports:
+    - port: 45228
+      protocol: TCP
+  - ports:
+    - port: 47952
+      protocol: TCP
+  - ports:
+    - port: 36414
+      protocol: TCP
+  - ports:
+    - port: 53280
+      protocol: TCP
+  - ports:
+    - port: 38592
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: infrastructure-operator
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-manager-placement-controller
+  namespace: open-cluster-management-hub
+spec:
+  ingress:
+  - ports:
+    - port: 57554
+      protocol: TCP
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 57384
+      protocol: TCP
+  - ports:
+    - port: 46622
+      protocol: TCP
+  - ports:
+    - port: 54128
+      protocol: TCP
+  - ports:
+    - port: 47718
+      protocol: TCP
+  - ports:
+    - port: 41634
+      protocol: TCP
+  - ports:
+    - port: 52086
+      protocol: TCP
+  - ports:
+    - port: 42986
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: clustermanager-placement-controller
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-grc-policy-addon-controller
+  namespace: open-cluster-management
+spec:
+  podSelector:
+    matchLabels:
+      app: grc
+      component: ocm-policy-addon-ctrl
+      release: grc
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-integrations
+  namespace: open-cluster-management
+spec:
+  ingress:
+  - ports:
+    - port: 41010
+      protocol: TCP
+  - ports:
+    - port: 33328
+      protocol: TCP
+  - ports:
+    - port: 34938
+      protocol: TCP
+  - ports:
+    - port: 58408
+      protocol: TCP
+  - ports:
+    - port: 37626
+      protocol: TCP
+  - ports:
+    - port: 55518
+      protocol: TCP
+  - ports:
+    - port: 55854
+      protocol: TCP
+  - ports:
+    - port: 47414
+      protocol: TCP
+  - ports:
+    - port: 44294
+      protocol: TCP
+  - ports:
+    - port: 46644
+      protocol: TCP
+  - ports:
+    - port: 45430
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      name: multicluster-integrations
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-multicluster-operators-hub-subscription
+  namespace: open-cluster-management
+spec:
+  podSelector:
+    matchLabels:
+      app: multicluster-operators-hub-subscription
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-hiveadmission
+  namespace: hive
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-kube-apiserver
+      podSelector:
+        matchLabels:
+          apiserver: "true"
+          app: openshift-kube-apiserver
+          revision: "12"
+    ports:
+    - port: 9443
+      protocol: TCP
+  - ports:
+    - port: 44554
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: hiveadmission
+      hiveadmission: "true"
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-console-mce-console
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: k8s
+          app.kubernetes.io/managed-by: prometheus-operator
+          app.kubernetes.io/name: prometheus
+          operator.prometheus.io/name: k8s
+          operator.prometheus.io/shard: "0"
+          prometheus: k8s
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-console
+      podSelector:
+        matchLabels:
+          app: console
+          component: ui
+    ports:
+    - port: 3000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: console-mce
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-hypershift-addon-manager
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 34012
+      protocol: TCP
+  - ports:
+    - port: 49552
+      protocol: TCP
+  - ports:
+    - port: 45986
+      protocol: TCP
+  - ports:
+    - port: 39836
+      protocol: TCP
+  - ports:
+    - port: 43920
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: hypershift-addon-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-cluster-proxy-addon-manager
+  namespace: multicluster-engine
+spec:
+  ingress:
+  - ports:
+    - port: 59838
+      protocol: TCP
+  - ports:
+    - port: 34784
+      protocol: TCP
+  - ports:
+    - port: 53938
+      protocol: TCP
+  - ports:
+    - port: 37088
+      protocol: TCP
+  - ports:
+    - port: 42472
+      protocol: TCP
+  - ports:
+    - port: 40100
+      protocol: TCP
+  - ports:
+    - port: 54974
+      protocol: TCP
+  - ports:
+    - port: 52802
+      protocol: TCP
+  - ports:
+    - port: 42806
+      protocol: TCP
+  - ports:
+    - port: 49054
+      protocol: TCP
+  - ports:
+    - port: 46388
+      protocol: TCP
+  - ports:
+    - port: 34436
+      protocol: TCP
+  - ports:
+    - port: 51678
+      protocol: TCP
+  - ports:
+    - port: 50318
+      protocol: TCP
+  - ports:
+    - port: 48978
+      protocol: TCP
+  - ports:
+    - port: 53100
+      protocol: TCP
+  - ports:
+    - port: 49378
+      protocol: TCP
+  - ports:
+    - port: 60032
+      protocol: TCP
+  - ports:
+    - port: 34938
+      protocol: TCP
+  - ports:
+    - port: 56286
+      protocol: TCP
+  - ports:
+    - port: 39884
+      protocol: TCP
+  - ports:
+    - port: 46262
+      protocol: TCP
+  - ports:
+    - port: 44632
+      protocol: TCP
+  - ports:
+    - port: 52342
+      protocol: TCP
+  - ports:
+    - port: 53762
+      protocol: TCP
+  - ports:
+    - port: 40130
+      protocol: TCP
+  - ports:
+    - port: 35232
+      protocol: TCP
+  - ports:
+    - port: 60420
+      protocol: TCP
+  - ports:
+    - port: 59162
+      protocol: TCP
+  - ports:
+    - port: 56122
+      protocol: TCP
+  - ports:
+    - port: 34794
+      protocol: TCP
+  - ports:
+    - port: 39612
+      protocol: TCP
+  - ports:
+    - port: 38852
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      chart: cluster-proxy-addon-2.1.0
+      component: cluster-proxy-addon-manager
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-klusterlet-agent
+  namespace: open-cluster-management-agent
+spec:
+  ingress:
+  - ports:
+    - port: 36992
+      protocol: TCP
+  - ports:
+    - port: 59050
+      protocol: TCP
+  - ports:
+    - port: 48480
+      protocol: TCP
+  - ports:
+    - port: 39122
+      protocol: TCP
+  - ports:
+    - port: 41422
+      protocol: TCP
+  - ports:
+    - port: 42216
+      protocol: TCP
+  - ports:
+    - port: 48852
+      protocol: TCP
+  - ports:
+    - port: 36832
+      protocol: TCP
+  - ports:
+    - port: 50510
+      protocol: TCP
+  - ports:
+    - port: 40668
+      protocol: TCP
+  - ports:
+    - port: 58756
+      protocol: TCP
+  - ports:
+    - port: 43430
+      protocol: TCP
+  - ports:
+    - port: 55642
+      protocol: TCP
+  - ports:
+    - port: 44304
+      protocol: TCP
+  - ports:
+    - port: 41560
+      protocol: TCP
+  - ports:
+    - port: 51196
+      protocol: TCP
+  - ports:
+    - port: 38928
+      protocol: TCP
+  - ports:
+    - port: 51532
+      protocol: TCP
+  - ports:
+    - port: 34074
+      protocol: TCP
+  - ports:
+    - port: 48644
+      protocol: TCP
+  - ports:
+    - port: 53162
+      protocol: TCP
+  - ports:
+    - port: 58388
+      protocol: TCP
+  - ports:
+    - port: 55914
+      protocol: TCP
+  - ports:
+    - port: 34720
+      protocol: TCP
+  - ports:
+    - port: 53528
+      protocol: TCP
+  - ports:
+    - port: 53804
+      protocol: TCP
+  - ports:
+    - port: 33810
+      protocol: TCP
+  - ports:
+    - port: 50906
+      protocol: TCP
+  - ports:
+    - port: 58160
+      protocol: TCP
+  - ports:
+    - port: 51416
+      protocol: TCP
+  - ports:
+    - port: 52082
+      protocol: TCP
+  - ports:
+    - port: 51150
+      protocol: TCP
+  - ports:
+    - port: 45674
+      protocol: TCP
+  - ports:
+    - port: 58522
+      protocol: TCP
+  - ports:
+    - port: 47082
+      protocol: TCP
+  - ports:
+    - port: 8443
+      protocol: TCP
+  - ports:
+    - port: 60584
+      protocol: TCP
+  - ports:
+    - port: 58912
+      protocol: TCP
+  - ports:
+    - port: 46582
+      protocol: TCP
+  - ports:
+    - port: 40894
+      protocol: TCP
+  - ports:
+    - port: 54722
+      protocol: TCP
+  - ports:
+    - port: 52828
+      protocol: TCP
+  - ports:
+    - port: 55618
+      protocol: TCP
+  - ports:
+    - port: 32978
+      protocol: TCP
+  - ports:
+    - port: 38170
+      protocol: TCP
+  - ports:
+    - port: 56754
+      protocol: TCP
+  - ports:
+    - port: 35536
+      protocol: TCP
+  - ports:
+    - port: 35596
+      protocol: TCP
+  - ports:
+    - port: 48046
+      protocol: TCP
+  - ports:
+    - port: 34260
+      protocol: TCP
+  - ports:
+    - port: 53674
+      protocol: TCP
+  - ports:
+    - port: 35778
+      protocol: TCP
+  - ports:
+    - port: 45144
+      protocol: TCP
+  - ports:
+    - port: 52288
+      protocol: TCP
+  - ports:
+    - port: 56070
+      protocol: TCP
+  - ports:
+    - port: 48306
+      protocol: TCP
+  - ports:
+    - port: 44978
+      protocol: TCP
+  - ports:
+    - port: 35820
+      protocol: TCP
+  - ports:
+    - port: 55982
+      protocol: TCP
+  - ports:
+    - port: 37704
+      protocol: TCP
+  - ports:
+    - port: 49296
+      protocol: TCP
+  - ports:
+    - port: 38858
+      protocol: TCP
+  - ports:
+    - port: 45058
+      protocol: TCP
+  - ports:
+    - port: 41990
+      protocol: TCP
+  - ports:
+    - port: 44570
+      protocol: TCP
+  - ports:
+    - port: 37854
+      protocol: TCP
+  - ports:
+    - port: 49882
+      protocol: TCP
+  - ports:
+    - port: 60508
+      protocol: TCP
+  - ports:
+    - port: 52824
+      protocol: TCP
+  - ports:
+    - port: 46332
+      protocol: TCP
+  - ports:
+    - port: 33616
+      protocol: TCP
+  - ports:
+    - port: 40724
+      protocol: TCP
+  - ports:
+    - port: 44250
+      protocol: TCP
+  - ports:
+    - port: 46036
+      protocol: TCP
+  - ports:
+    - port: 52800
+      protocol: TCP
+  - ports:
+    - port: 41844
+      protocol: TCP
+  - ports:
+    - port: 50220
+      protocol: TCP
+  - ports:
+    - port: 40200
+      protocol: TCP
+  - ports:
+    - port: 59800
+      protocol: TCP
+  - ports:
+    - port: 56592
+      protocol: TCP
+  - ports:
+    - port: 47942
+      protocol: TCP
+  - ports:
+    - port: 35484
+      protocol: TCP
+  - ports:
+    - port: 48718
+      protocol: TCP
+  - ports:
+    - port: 57934
+      protocol: TCP
+  - ports:
+    - port: 49646
+      protocol: TCP
+  - ports:
+    - port: 50402
+      protocol: TCP
+  - ports:
+    - port: 42772
+      protocol: TCP
+  - ports:
+    - port: 35792
+      protocol: TCP
+  - ports:
+    - port: 34630
+      protocol: TCP
+  - ports:
+    - port: 59200
+      protocol: TCP
+  - ports:
+    - port: 36188
+      protocol: TCP
+  - ports:
+    - port: 36940
+      protocol: TCP
+  - ports:
+    - port: 42780
+      protocol: TCP
+  - ports:
+    - port: 52270
+      protocol: TCP
+  - ports:
+    - port: 48192
+      protocol: TCP
+  - ports:
+    - port: 57998
+      protocol: TCP
+  - ports:
+    - port: 57836
+      protocol: TCP
+  - ports:
+    - port: 45866
+      protocol: TCP
+  - ports:
+    - port: 37284
+      protocol: TCP
+  - ports:
+    - port: 50808
+      protocol: TCP
+  - ports:
+    - port: 47566
+      protocol: TCP
+  - ports:
+    - port: 40614
+      protocol: TCP
+  - ports:
+    - port: 46538
+      protocol: TCP
+  - ports:
+    - port: 57330
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: klusterlet-agent
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: "2025-11-17T17:55:01Z"
+  labels:
+    network-policy-generator.stackrox.io/generated: "true"
+  name: stackrox-generated-automation-controller-operator-controller-manager
+  namespace: aap
+spec:
+  ingress:
+  - ports:
+    - port: 6789
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      control-plane: controller-manager
+  policyTypes:
+  - Ingress

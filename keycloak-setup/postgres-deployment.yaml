@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql-db
+  namespace: keycloak
+  labels:
+    app: postgresql-db
+spec:
+  serviceName: postgresql-db-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql-db
+  template:
+    metadata:
+      labels:
+        app: postgresql-db
+    spec:
+      # This security context works with the 'anyuid' SCC
+      securityContext:
+        fsGroup: 26 
+        fsGroupChangePolicy: "OnRootMismatch"
+      containers:
+        - name: postgresql
+          image: registry.redhat.io/rhel8/postgresql-15:latest
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          # This section has the corrected 'POSTGRESQL_' names
+          env:
+            - name: POSTGRESQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: POSTGRES_DATABASE
+            - name: POSTGRESQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: POSTGRES_USER
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db-secret
+                  key: POSTGRES_PASSWORD
+          # This section mounts the storage
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/pgsql/data
+  # This section defines the storage
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        # This is your cluster's correct StorageClass
+        storageClassName: "ocs-storagecluster-ceph-rbd" 
+        resources:
+          requests:
+            storage: 5Gi # Adjust storage as needed

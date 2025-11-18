@@ -1,0 +1,36 @@
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: Keycloak
+metadata:
+  name: example-keycloak-instance
+  namespace: keycloak
+  labels:
+    app: keycloak
+spec:
+  instances: 1 
+  
+  # --- Database Configuration ---
+  db:
+    vendor: postgres
+    host: postgresql-db-service
+    database: keycloak
+    usernameSecret:
+      name: keycloak-db-secret
+      key: username
+    passwordSecret:
+      name: keycloak-db-secret
+      key: password
+
+  # --- This block creates the Route ---
+  hostname:
+    hostname: keycloak-keycloak.apps.cluster-realip.zeteq.com
+
+  # --- This block configures the pod for the Route ---
+  http:
+    httpEnabled: true
+
+  # --- This block fixes the proxy and crash ---
+  additionalOptions:
+    - name: proxy-headers
+      value: xforwarded
+    - name: hostname-strict
+      value: "false" # <-- This is the fix for the crash

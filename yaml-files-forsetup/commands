@@ -9,4 +9,4 @@
 
    oc apply -f gitops-application.yaml -n openshift-gitops
 
-c
+oc get backup.velero.io -n openshift-adp

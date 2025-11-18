@@ -1,0 +1,120 @@
+
+
+
+cloudflare-secret.yaml
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-token-secret
+  namespace: cert-manager  # Install this in the same namespace as cert-manager
+stringData:
+  api-token: hZ4aqjEUv7Ds9KveOe6iGkjUR5yGsIQwRBvBuJTV
+
+
+
+oc apply -f cloudflare-secret.yaml
+
+
+
+nano cluster-issuer.yaml
+
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-cloudflare
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    
+    # Your email address
+    email: zeshaq@gmail.com
+    
+    # Name of a secret to store your ACME account's private key
+    privateKeySecretRef:
+      name: letsencrypt-private-key
+
+    # Configure the DNS-01 challenge provider
+    solvers:
+    - dns01:
+        cloudflare:
+          email: zeshaq@gmail.com
+          apiTokenSecretRef:
+            name: cloudflare-api-token-secret
+            key: api-token
+
+
+oc apply -f cluster-issuer.yaml
+
+
+nano apps-certificate.yaml
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: apps-certificate
+  namespace: openshift-ingress  # <-- This is the correct namespace
+spec:
+  secretName: apps-wildcard-tls-secret  # <-- cert-manager will create this secret
+  dnsNames:
+  - "*.apps.cluster-realip.zeteq.com"
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+
+
+
+    oc apply -f apps-certificate.yaml
+
+
+    oc patch ingresscontroller.operator default -n openshift-ingress-operator --type=merge -p '{"spec":{"defaultCertificate": {"name": "apps-wildcard-tls-secret"}}}'
+
+
+
+nano api-certificate.yaml
+
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: api-certificate
+  namespace: openshift-config  # <-- This is the correct namespace
+spec:
+  secretName: api-tls-secret      # <-- cert-manager will create this secret
+  dnsNames:
+  - "api.cluster-realip.zeteq.com"
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+
+
+oc apply -f api-certificate.yamloc apply -f api-certificate.yaml
+
+
+oc patch apiserver cluster --type=merge -p '{"spec":{"servingCerts": {"namedCertificates": [{"names": ["api.cluster-realip.zeteq.com"], "servingCertificate": {"name": "api-tls-secret"}}]}}}'oc patch apiserver cluster --type=merge -p '{"spec":{"servingCerts": {"namedCertificates": [{"names": ["api.cluster-realip.zeteq.com"], "servingCertificate": {"name": "api-tls-secret"}}]}}}'
+
+
+
+
+
+
+oc get routes --all-namespaces -o json | \
+jq '.items[] | .spec.tls={"termination":"edge","insecureEdgeTerminationPolicy":"Redirect"} | {metadata:{name:.metadata.name,namespace:.metadata.namespace},spec:.spec}' \
+| oc apply -f -
+
+
+
+oc get clusterissuer letsencrypt-cloudflare -o wide
+
+# Check the apps certificate
+oc get certificate apps-certificate -n openshift-ingress -o wide
+
+# Check the API certificate
+oc get certificate api-certificate -n openshift-config -o wide
+
+
+http:
+    # Use the secret that cert-manager created!
+    tlsSecret: apps-wildcard-tls-secret
