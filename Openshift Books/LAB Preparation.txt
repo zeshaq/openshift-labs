@@ -1,0 +1,526 @@
+Total Questions : 20/21
+Total Duration  : 3 Hours
+
+
+Exam Instructions:
+
+you will have 1 VMs in the exam
+3 Hours Exam Cluster is already configured, and all required packages are installed.
+In case you need any package, you can install with preconfigured repositories.
+Docs are available in html and pdf format
+Cluster Web Console and API url will be given in the exam:
+
+https://console.domain3.example.com:6443
+
+You have one user opsadm in workbecnch.example.com is given in exam password of opsadm is given in instructions
+
+{use ssh to access the workbench}
+	# ssh workbecnch.example.com   or ???? open terminal ????
+			or
+	# ssh opsadm@workbecnch.example.com    [Select "yes" --> in password prompt give password "password"]
+Password of kubeadm is stored in file in workbench "/home/opsadm/kubeadminpassword.txt"
+	# cat /home/opsadm/kubeadminpassword.txt
+All the configuration tools to run Openshift cluster already available in workbench.
+
+All docs are available in html and pdf format.
+
+After entering in exam open a terminal and do ssh by root on workstation by given password.
+One common password will be given in the exam, we can use same password to access Workstation VM as root.
+
+	# oc login -u kubeadmin -p <Password>  https://console.domain3.example.com:6443
+
+Questions-01 :  Manage identity Providers:
+	
+	- configure the Oauth to use HTPasswd as the identity provider
+	- secret name should be ex280-secure and identity provider name should be ex280-idp-secure
+	- Create user bob with password indionce
+	- Create user qwerty with password catalog
+	- Create user john with password john123
+	- Create user armstrong with password natasha123
+	- Create user natasha with password arthstrong
+	- Create user harry with password harry123
+	- Create user susan with password susuan123
+
+Solution : 
+	
+	[student@workstation ~]$ htpasswd -c -B -b /tmp/htpasswd bob indionce
+	[student@workstation ~]$ htpasswd -B -b /tmp/htpasswd qwerty catalog
+	[student@workstation ~]$ htpasswd -B -b /tmp/htpasswd john john123
+	[student@workstation ~]$ htpasswd -B -b /tmp/htpasswd armstrong natasha123
+	[student@workstation ~]$ htpasswd -B -b /tmp/htpasswd natasha arthstrong
+	[student@workstation ~]$ htpasswd -B -b /tmp/htpasswd harry harry123
+	[student@workstation ~]$ htpasswd -B -b /tmp/htpasswd susan susuan123
+                                      [Can i go "cd /tmp/" dir for run bellow command and can i create directory any other location instean of "/tmp"]
+	[student@workstation ~]$ oc create secret generic ex280-secure --from-file htpasswd=/tmp/htpasswd -n openshift-config
+	[student@workstation ~]$ oc edit oauth cluster     [???? After Edit No need any command for refresh or any other. new pod created after 3 to 5 minutes???]
+					[oc get oauth cluster -o yaml > oauth.yaml.backup]      
+					[oc get oauth cluster -o yaml > oauth.yaml]
+					[oc apply -f oauth.yaml]
+					[Is it edit to oauth.yaml file?]
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~[For LAB]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+         vi oauth.yaml
+				spec:
+	  			  identityProviders:
+	  			  - name: localusers
+	    			    mappingMethod: claim
+	   			    type: HTPasswd
+	    			    htpasswd:
+	     			     fileData:
+	      			      name: userdetails
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~[For Exam]~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				spec:
+	  			  identityProviders:
+	  			  - htpasswd:
+	     			     fileData:
+	      			      name: ex280-secure
+	    			    mappingMethod: claim
+				    name: ex280-idp-secure
+	   			    type: HTPasswd
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	[student@workstation ~]$ oc get pods -n openshift-authentication
+	[student@workstation ~]$ oc login -u bob -p indionce
+	[student@workstation ~]$ oc whoami
+	[student@workstation ~]$ oc get users
+
+Questions-02 :  Manage Cluster Project and Permissions:
+
+	- Create project with named apollo,test,demo
+	- bob user should have cluster administrator rights
+	- john user can create projects
+	- qwerty user can not create projects
+	- natasha user can only view the resources of apollo and test project
+	- armstrong user should have admin access to apollo project.
+	- kubeadmin user should not exist (remove kubeadmin user)
+
+
+Solution : 
+	
+	[student@workstation ~]$ oc new-project apollo
+	[student@workstation ~]$ oc new-project test
+	[student@workstation ~]$ oc new-project demo
+	[student@workstation ~]$ oc adm policy add-cluster-role-to-user cluster-admin bob
+	[student@workstation ~]$ oc adm policy remove-cluster-role-from-group self-provisioner system:authenticated:oauth
+	[student@workstation ~]$ oc adm policy add-cluster-role-to-user self-provisioner john
+	[student@workstation ~]$ oc policy add-role-to-user view natasha -n apollo
+	[student@workstation ~]$ oc policy add-role-to-user view natasha -n test
+	[student@workstation ~]$ oc policy add-role-to-user admin armstrong -n apollo
+	[student@workstation ~]$ oc login -u bob -p indionce
+	[student@workstation ~]$ oc delete secret kubeadmin -n kube-system
+	[student@workstation ~]$
+	[student@workstation ~]$
+	[student@workstation ~]$
+	[student@workstation ~]$
+
+Questions-03 :  Managing Groups:
+
+	- Create groups with name site-users and guest-users
+	- add qwerty user in guest-users group
+	- add harry and susan users in site-users
+	- Give edit permission to site-users group on test project
+	- Give view permission to guest-users group on demo project
+
+Solution : 
+	
+	[student@workstation ~]$ oc adm groups new site-users
+	[student@workstation ~]$ oc adm groups new guest-users
+	[student@workstation ~]$ oc adm groups add-users guest-users qwerty
+	[student@workstation ~]$ oc adm groups add-users site-users harry susan
+	[student@workstation ~]$ oc get group
+	[student@workstation ~]$ oc policy add-role-to-group edit site-users -n test
+	[student@workstation ~]$ oc policy add-role-to-group view guest-users -n demo
+	[student@workstation ~]$ oc get rolebinding -n test
+	[student@workstation ~]$ oc get rolebinding -n demo
+
+Questions-04 :  Create resource quota for project rocky:
+
+	- pods=3
+	- cpu=2
+	- services=6
+	- memory=1Gi
+	- secrets=6
+	- replication controllers=6
+
+Solution : 
+	
+	[student@workstation ~]$ oc project rocky
+	[student@workstation ~]$ oc create quota my-quota --hard=cpu=2,memory=1G,pods=3,services=6,replicationcontrollers=6,secrets=6
+	[student@workstation ~]$ oc get quota
+
+Questions-05 :  Create LimitRange for project darpa:
+
+	- set the pod memory limit between 5Mi and 300Mi
+	- set the container memory limit between 5Mi and 300Mi and container default request limit for memory is 100Mi
+	- Set the pod cpu limit between 5m and 300m
+	- set the container cpu limit between 5m and 300m and container default request limit for cpu is 100m
+
+
+Solution : 
+	
+	[student@workstation ~]$ vi limit.yaml
+	[student@workstation ~]$ oc create -f limit.yaml
+	[student@workstation ~]$ oc get limitranges
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			apiVersion:v1
+			kind: LimitRange
+			metadata: 
+				name: dev-limit
+				namespace: darpa
+			spec:
+				limits:
+					- type: Pod
+					  max:
+						cpu: 300m
+						memory: 300Mi
+					  min:
+						cpu: 5m
+						memory: 5Mi
+					- type: Container
+					  max:
+						cpu: 300m
+						memory: 300Mi
+					  min:
+						cpu: 5m
+						memory: 5Mi
+					  default:
+						cpu: 100m
+						memory: 100Mi
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	[student@workstation ~]$ oc apply -f limit.yaml    [which one "oc apply" or "oc create"]
+
+Questions-06 :  Scale Application Manually:
+
+	- Scale the single-pod replicas to 5 under the project world and make sure all pods should run successfully
+
+Solution : 
+	
+	[student@workstation ~]$ oc project world
+	[student@workstation ~]$ oc get deployment
+	[student@workstation ~]$ oc scale deployment httpd --replicas=5	
+	[student@workstation ~]$ oc get pods
+	[student@workstation ~]$ oc get deployment
+
+Questions-07 :  Autoscale of Pods in scaling project:
+
+	- minimum replicas=2, maximum replicas=9 and cpu percentage=60%
+	- default request for container memory should 100Mi and cpu 50m
+	
+	for practice create a new-project scaling
+
+Solution : 
+	
+	[student@workstation ~]$ oc get deployment
+	[student@workstation ~]$ oc set resources deployment httpd --requests=cpu=50m,memory=100Mi
+	[student@workstation ~]$ oc get pods	
+	[student@workstation ~]$ oc autoscale deployment httpd --min=2 --max=9 --cpu-percent=60
+	[student@workstation ~]$ oc get hpa
+
+Questions-08 :  Create secret with named magic in math project:
+
+	- The key name should be dirlong
+	- The value of key should be asdf234234
+
+Questions-08 :  Create secret with named magic in monday project:
+
+	- The key name should be MYSQL_ROOT_PASSWORD
+	- The value of key should be redhat
+
+Solution : 
+	
+	[student@workstation ~]$ oc project monday
+	[student@workstation ~]$ oc create secret generic monday --from-literal MYSQL_ROOT_PASSWORD=redhat -n monday
+	[student@workstation ~]$ oc get secret -n monday
+
+Questions-09 :  Use secret in monday project:
+
+	- There is one pod already exists
+	- it should use magic secret previously created
+	- Application should produce output
+
+	don't run this command in exam it is needed to create a exam env on your labs ==(oc new-app --name monday --docker-image registry.access.redhat.com/rhscl/mysql-57-rhel7:5.7-47)
+
+Solution : 
+	
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~for See logs~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	oc get deployment (there can be deployment also not dc)
+	oc get dc (there can be dc also not deployment)
+	oc logs <podname>
+	oc get events
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~for See logs end~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	due to env variable the application will not be running. it you have set the variable anf after that also if application is not working then you can see the logs
+	and events for future reasons. may be on worker node taint is applied. if it is than remove the taint from worker node only.
+
+	How to set the ENV in deployment with secret
+	oc set env --help | less
+	oc set env --from=secret/monday deployment monday
+	
+	[student@workstation ~]$ oc project monday
+	[student@workstation ~]$ oc get pods
+	[student@workstation ~]$ oc set env --from=secret/monday deployment monday
+	[student@workstation ~]$ oc get pods
+
+Questions-10 :  Create secure route in quart project:
+
+	- One application is already running named with hello based on http and route htquart
+	- it should run on https with self-signed certificate
+	- subject is "/C=US/ST=North Carolina/L=Raleigh/O=RedHat/CN=quart.apps.ocp4.example.com"
+	- it should run on https with following url:https://quart.apps.domain3.example.com
+	- Application should produce output
+
+Solution : 
+	> Create certificate
+	
+	[student@workstation ~]$ openssl req -x509 -newkey rsa:2048 -keyout req.key -out req.crt -nodes -days 365 -sub "/C=US/ST=North Carolina/L=Raleigh/O=RedHat/CN=quart.apps.ocp4.example.com"
+	[student@workstation ~]$ ls
+
+	> Now create route	
+
+	[student@workstation ~]$ oc get svc
+	[student@workstation ~]$ oc create route edge htquart --service=httpd --hostname=quart.apps.ocp4.example.com --cert ./req.crt --key ./req.key
+	[student@workstation ~]$ oc get route
+
+Questions-11 :  Create service account(user) in qed:
+
+	- Service Account (user) should be project1-sa
+	- Service Account should be associated with anyuid SCC
+
+
+Solution : 
+	oc project qed
+	oc create serviceaccount --help | less
+	oc create serviceaccount project1-sa -n qed
+	oc adm policy --help | less
+	oc adm policy add-scc-to-user --help | less
+	oc adm policy add-scc-to-user anyuid -z project1-sa
+	
+	[student@workstation ~]$ oc project qed
+	[student@workstation ~]$ oc create serviceaccount project1-sa
+	[student@workstation ~]$ oc adm policy add-scc-to-user anyuid -z project1-sa
+
+Questions-12 :  Deploy Application in the project qed:
+
+	- There is one pod alreday running
+	- Modify the Application as is should run with any user as provided by Application
+	- Application should produce output
+
+	Don't run this command in exam it is needed to create a exam env on your lab
+	(oc new-app --name gitlab --docker-image gitlab/gitlab-ce:8.4.3-ce.0)
+	(oc expose service gitlab --port 80)
+	(oc get pods) -it will give you error now you can try to resolve it.
+	Don't run this command in exam it is needed to create a exam env on your lab. 
+
+Solution : 
+	oc project qed
+	oc get pods
+	oc get deployment (there can be deployment also not dc)
+	oc get dc (there can be dc also not deployment)
+	oc logs <podname>
+	oc get events
+	
+	due to no permission the application will not be running it means you need to set the service account so that container can run with any user. 
+
+	[student@workstation ~]$ oc project qed
+	[student@workstation ~]$ oc get pods
+	[student@workstation ~]$ oc get deployment
+	[student@workstation ~]$ oc set serviceaccount deployment/gitlab project1-sa
+	[student@workstation ~]$ oc get pods
+
+Questions-13 :  Install an helm chart etherpad from repository http://helm.ocp4.example.com/charts
+
+Solution : 
+
+
+	[student@workstation ~]$ helm repo add do280-repo http://helm.ocp4.example.com/charts
+	[student@workstation ~]$ helm search repo --versions
+	[student@workstation ~]$ helm install example-app do280-repo/etherpad
+	[student@workstation ~]$ oc get pods or oc get pods   [Run any one]
+
+Questions-16 :  Install an operator called file-integrity-manager:
+
+	- Plan Automatic
+	- Using project openshift-file-integrity
+
+
+	> Login with bob user in GUI
+
+Solution :
+	Opertator --> OperatorHub --> Search "File integrity Operator" --> Click "File integrity Operator" --> Click Install --> 
+	Installed Namespace : openshift-file-integrity
+	Update Approval     : Automatic
+	Click Install --> (Takes 1/2 Minutes to install) 
+
+
+Questions-14 :  create a cronjob test-cron
+
+	- 04:05 time
+	- Every 2 day and every month
+	- use image registry.io/imagename
+	- The service account and service account name is project1-sa
+	- Successfully job history limit 14
+	- Project name should be cron-test
+
+	Create a cronjob using webconsole or take yaml from documentation
+	Both provide in instruction
+
+	oc create cronjob --help	
+
+Solution : 
+	
+	[student@workstation ~]$ oc project cron-test
+	[student@workstation ~]$ oc get all
+	[student@workstation ~]$ create cronjob --help
+	[student@workstation ~]$ oc create cronjob test-cron --image=registry.io/imagename --schedule '05 04 2 * *' 
+	[student@workstation ~]$ oc set serviceaccount cronjob/test-cron project1-sa
+	[student@workstation ~]$ oc edit cronjob test-cron
+		[in the bottom of yaml file "successfulJobHistoryLimit: 3" "3" value will be change and set "14"]
+
+Questions-20 : create an network policy to connect two pod which are resides in different projects
+
+	- First pod is in database namespace and second is in checker project
+	- Pod in project checker should communicate with database pod
+	- Create an network policy name mysql-db-com
+	- Policy uses labels to specify namespace with team=devsecops and for pods selector
+	- Uses label deployment=web-mysql
+	- use port 3306/tcp
+	- Check the logs of checker pod for verification
+
+Solution : 
+	
+	[student@workstation ~]$ oc project checker
+	[student@workstation ~]$ oc label namespace checker team=devsecops
+	[student@workstation ~]$ describe project checker
+	
+	Network --> NetworkPolices --> Select "Project Database" --> CreateNetworkPolicy -->  	
+	Policy Name : mysql-db-com
+	Click "Add ingress rule"
+	Add Allowed Source : Allow pod from inside the cluster 
+	Click "Namespace Selector"
+	Label : team
+	Selector: devsecops
+	Click "Pod Selector"
+	Label : deployment
+	Selector: web-mysql
+	Click "Add port"
+	TCP: 3306
+	--> Click Create 
+
+	[student@workstation ~]$ oc create cronjob test-cron --image=registry.io/imagename --schedule '05 04 2 * *' 
+	[student@workstation ~]$ oc set serviceaccount cronjob/test-cron project1-sa
+	[student@workstation ~]$ oc edit cronjob test-cron
+
+Questions-18 : create a pv
+
+	- Name is landing-pv
+	- Size - 1Gi
+	- Policy - retain
+	- Mode - ReadOnlyMany
+	Create a PVC
+	- Name is landing-pvc
+	- Size same as pv
+	- Mount pvc to /usr/share/nginx/html
+	- Project name is page
+	- Mode same as pv
+	Create an Deployment with
+	- Name landing
+	- Image is registry.ocp4.example.com:8443/redhattraining/hello-world-nginx.v1.0
+	- Application uses this link to show output http://contet.example.ocp4.com
+	- After attaching storage it shows desired output
+	- Name of deployment is landing
+
+Solution : 
+	
+	[student@workstation ~]$ oc describe storageclasses.storage.k8s.io nfs2   [Collect path and server IP]
+
+Questions-15 : create a project template with limitrange with container
+
+	- minimum memory is 5Mi max is 1Gi defaultrequest 254 Mi defaultlimit is 512Mi
+	- make sure this template available as default request new-project template for users.
+
+	Create limit range using web console and move..
+
+Solution : 
+	
+	
+	Administration --> LimitRange --> CreateLimitRange -->[Copy the yaml file]
+
+	[student@workstation ~]$ vi limitrange.yml      [paste in here, Namespace line removed]
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		apiVersion: v1
+		kind: LimitRange
+		metadata:
+		  name: mem-limit-range
+		spec:
+		  limits:
+		    - default:
+			memory: 512Mi
+		      defaultRequest:
+			memory: 254Mi
+		      max:
+			memory: 1Gi
+		      min:
+			memory: 5Mi
+		      type: Container
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	[student@workstation ~]$ oc adm create-bootstrap-project-template -o yaml > template.yml
+	[student@workstation ~]$ cat limitrange.yml  [copy the code from limitrange]
+	[student@workstation ~]$ vi template.yml     [Paste bottom of the file before "Parameter" line and check the indent]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		- apiVersion: v1
+		  kind: LimitRange
+		  metadata:
+		    name: mem-limit-range
+		  spec:
+		    limits:
+		      - default:
+			 memory: 512Mi
+		        defaultRequest:
+			 memory: 254Mi
+		        max:
+			 memory: 1Gi
+		        min:
+			 memory: 5Mi
+		        type: Container
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	[student@workstation ~]$ oc apply -f template.yml -n openshift-config
+	[student@workstation ~]$ oc get project.config
+	[student@workstation ~]$ oc edit project.config cluster
+			spec:
+			  projectRequestTemplate:
+			    name: project-request
+	[student@workstation ~]$ watch oc get pods -n openshift-apiserver
+
+for test 
+	[student@workstation ~]$ oc new-project project01
+	[student@workstation ~]$ oc get limitrange
+
+Questions-21 : start a probe in project start
+
+	- Create a Liveliness Health probe in project tuesday which has 1 pod running
+	- With port 8443
+	- initial delay of 3 sec 
+	- Time out for the probe is 10 sec
+	- Probe must survive atleast 3 crash
+
+Solution : 
+	
+	
+	Workloads --> Deployments --> Select "Project tuesday" --> Running pod(probe) click ...(three . in right side) --> Add heatlh check --> Add liveness probe --> 
+	Port : 8443
+	Failure Thrashold : 3
+	initial Delay : 3
+	Time Out : 10
+	--> Click (Tick) --> Click Add
+
+Questions-18 : Collect cluster information and create a tar file with name system10<cluster.id>.tar.gz and send it to redhat support
+
+	- Use command tar cvaf
+	- One script has been provided to upload tar in redhat support
+	- /usr/bin/script/script system10<cluster.id>.tar.gz 
+	- The script can be performd multiple times and it will overwrite the tar file every time
+
+Solution : 
+	
+	[student@workstation ~]$ oc adm must-gather
+	[student@workstation ~]$ tar cvaf system10-<Cluster.id>.tar.gz must-gather.local.0924979242432/     [must-gather.local.0924979242432 = log gather file generate after run previous command]
+	[student@workstation ~]$ ls
+	[student@workstation ~]$ /usr/bin/script/script system10-<Cluster.id>.tar.gz 
+	
