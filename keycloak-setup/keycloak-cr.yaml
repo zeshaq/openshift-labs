@@ -8,7 +8,7 @@ spec:
   db:
     # --- Database Configuration ---
     vendor: postgres
-    host: postgresql-db-svc
+    host: postgresql-db-service 
     
     # --- THIS IS THE FIX ---
     # Set the database name to 'keycloak'

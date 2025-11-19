@@ -1,0 +1,19 @@
+spec:
+  identityProviders:
+    - mappingMethod: claim
+      name: keycloak
+      openID:
+        claims:
+          email:
+            - email
+          name:
+            - name
+          preferredUsername:
+            - preferred_username
+        clientID: openshift-sso
+        clientSecret:
+          # THIS IS THE CRITICAL CORRECTION
+          name: keycloak-client-secret 
+        extraScopes: []
+        issuer: 'https://keycloak.apps.cluster-realip.zeteq.com/realms/openshift-realm'
+      type: OpenID

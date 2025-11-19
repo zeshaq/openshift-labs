@@ -1,0 +1,25 @@
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+spec:
+  identityProviders:
+  - name: keycloak # This MUST match the name in your Keycloak redirect URI
+    mappingMethod: claim
+    type: OpenID
+    openID:
+      clientID: openshift-auth # Your Keycloak Client ID
+      clientSecret:
+        name: keycloak-client-secret # The secret you just created
+      issuer: https://keycloak.apps.cluster-realip.zeteq.com/realms/ocp-realm # Your Issuer URL
+      
+      # Claims mapping (tells OpenShift how to find user data)
+      claims:
+        preferredUsername:
+        - preferred_username
+        name:
+        - name
+        email:
+        - email
+        groups:
+        - groups

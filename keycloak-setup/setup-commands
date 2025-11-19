@@ -28,3 +28,51 @@ oc logs my-keycloak-instance-0 -n keycloak --previous=true
 
 
 oc get endpoints postgresql-db-svc -n keycloak
+
+
+
+
+oc get secret my-keycloak-instance-initial-admin \
+  -o jsonpath='{.data.username}' | base64 -d
+
+
+temp-admin
+e5aa8b8b151246ce9bffd453f927a528
+
+admin 
+asdf@1234
+
+https://keycloak.apps.cluster-realip.zeteq.com/realms/ocp-realm
+b98T8JnLSJVvlgusqCiwx9VaES0DnWfO
+
+
+oc create secret generic keycloak-client-secret \
+  --from-literal=clientSecret='b98T8JnLSJVvlgusqCiwx9VaES0DnWfO' \
+  -n openshift-config
+
+
+
+  https://console-openshift-console.apps.cluster-realip.zeteq.com
+
+
+  hU9Jh-AKSkn-K9k32-kjBWg
+
+
+C9WvyROvAVRt5gFELWrkjfkALuddc7Fy
+
+  
+
+  oc create secret generic keycloak-client-secret \
+  --from-literal=clientSecret='C9WvyROvAVRt5gFELWrkjfkALuddc7Fy' \
+  -n openshift-config
+
+
+  oc create secret generic keycloak-client-secret \
+  --from-literal=clientSecret='C9WvyROvAVRt5gFELWrkjfkALuddc7Fy' \
+  -n openshift-config
+
+
+  oc create secret generic keycloak-client-secret \
+  --from-literal=clientSecret='C9WvyROvAVRt5gFELWrkjfkALuddc7Fy' \
+  -n openshift-config \
+  --dry-run=client -o yaml | oc apply -f -
